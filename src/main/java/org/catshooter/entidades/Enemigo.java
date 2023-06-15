@@ -3,7 +3,6 @@ package org.catshooter.entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemigo extends Sprite{
@@ -32,16 +31,18 @@ public class Enemigo extends Sprite{
         }
     }
     public void disparar() {
-        if (estaVivo) {
-            bala.translate(0, -4);
+        bala.translate(0, -4);
 
-            if (bala.getY() < -400) {
+        if (bala.getY() < -400) {
                 bala.setPosition(getX(), getY());
-            }
         }
     }
-    public void dibujarBala(SpriteBatch batch) {
-        bala.draw(batch);
+    public boolean balaEstaFueraDePantalla() {
+        if (bala.getY() < -20) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public void update() {
         mover();

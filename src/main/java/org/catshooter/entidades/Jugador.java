@@ -21,17 +21,17 @@ public class Jugador extends Sprite {
         this.speedBala = 20;
         spriteBala.setPosition(-20,4000);
     }
-    public void mover(float dt) {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+    public void definirControles(float dt) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) &&  getX() >= 0) {
             setPosition(getX() + (-200 * dt), getY());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && getX() <= Gdx.graphics.getWidth()) {
             setPosition(getX() + (200 * dt), getY());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && getY() <= Gdx.graphics.getHeight()) {
             setPosition(getX(), getY()+ (200 * dt));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && getY() >= 0) {
             setPosition(getX(), getY()+ (-200 * dt));
         }
     }
@@ -43,7 +43,7 @@ public class Jugador extends Sprite {
     public void update(float dt) {
         spriteBala.translate(0,speedBala);
         disparar();
-        mover(dt);
+        definirControles(dt);
     }
     public void dibujarBala(SpriteBatch batch) {
         spriteBala.setPosition(spriteBala.getX(), spriteBala.getY());

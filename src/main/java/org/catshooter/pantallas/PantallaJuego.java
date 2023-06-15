@@ -57,9 +57,12 @@ public class PantallaJuego extends PantallaAbstracta{
 
 
             for (Enemigo enemigo : enemigos) {
+                enemigo.getBala().draw(juego.getBatch());
                 if (enemigo.EstaVivo()) {
                     enemigo.draw(juego.getBatch());
-                    enemigo.dibujarBala(juego.getBatch());
+                }
+                if (!enemigo.EstaVivo() && enemigo.balaEstaFueraDePantalla()) {
+                    enemigo.getBala().setPosition(-2000,2000);
                 }
             }
 
