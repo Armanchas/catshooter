@@ -2,6 +2,7 @@ package org.catshooter.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Enemigo;
@@ -41,13 +42,13 @@ public class PantallaJuego extends PantallaAbstracta{
 
         if(getJugador() != null) {
 
-            matarEntidad();
-
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
             }
 
-            getJugador().update(Gdx.graphics.getDeltaTime());
+            getJugador().update(delta);
+
+            matarEntidad();
 
             for (Enemigo enemigo : enemigos) {
                 enemigo.update();
@@ -71,7 +72,7 @@ public class PantallaJuego extends PantallaAbstracta{
                 getJugador().dibujarBala(juego.getBatch());
 
             }
-            //se dibujan todos los aliados y sus disparos
+
             for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
                 entry.getValue().draw(juego.getBatch());
                 entry.getValue().dibujarBala(juego.getBatch());
@@ -108,12 +109,20 @@ public class PantallaJuego extends PantallaAbstracta{
         imgBala.dispose();
     }
     public void matarEntidad() {
+        Rectangle hitboxJugador = jugador.getBoundingRectangle();
+        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
+
         for (Enemigo enemigo : enemigos) {
-            if (jugador.getSpriteBala().getBoundingRectangle().overlaps(enemigo.getBoundingRectangle())) {
+            if (hitboxBala.overlaps(enemigo.getBoundingRectangle())) {
                 enemigo.setEstaVivo(false);
             }
-            if (enemigo.getBala().getBoundingRectangle().overlaps(jugador.getBoundingRectangle())) {
-                jugador.setEstaVivo(false);
+            if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+                jugador.setTimer(3f);
+                jugador.setEsInvencible(true);
+                jugador.restarVida();
+                if (jugador.getVidas() == 0) {
+                    jugador.setEstaVivo(false);
+                }
             }
         }
     }

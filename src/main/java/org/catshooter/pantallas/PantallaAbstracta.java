@@ -84,8 +84,8 @@ public abstract class PantallaAbstracta implements Screen {
             try {
                 data.put("x",jugador.getX());
                 data.put("y",jugador.getY());
-                data.put("xBala",jugador.getSpriteBala().getX());
-                data.put("yBala",jugador.getSpriteBala().getY());
+                data.put("xBala",jugador.getBala().getX());
+                data.put("yBala",jugador.getBala().getY());
                 socket.emit("actualizarPosiciones",data);
             } catch (JSONException e) {
                 System.out.println("Error!");
@@ -166,7 +166,7 @@ public abstract class PantallaAbstracta implements Screen {
                     double yBala = data.getDouble("yBala");
                     if (aliados.get(id) != null) {
                         aliados.get(id).setPosition((float) x, (float) y);
-                        aliados.get(id).getSpriteBala().setPosition((float) xBala, (float) yBala);
+                        aliados.get(id).getBala().setPosition((float) xBala, (float) yBala);
                     }
                 } catch (JSONException e) {
                     System.out.println("Error");
