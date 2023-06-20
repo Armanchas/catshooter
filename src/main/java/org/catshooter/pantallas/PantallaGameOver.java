@@ -7,7 +7,7 @@ import org.catshooter.core.Juego;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaGameOver extends Pantalla {
-    private final Texture imagen = new Texture("gameover.png");;
+    private final Texture imagen = new Texture("menu/gameover.png");;
     private final PantallaAbstracta pantallaActual;
     public PantallaGameOver(Juego juego) {
         super(juego);

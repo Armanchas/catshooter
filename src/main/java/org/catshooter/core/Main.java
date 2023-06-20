@@ -6,7 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 public class Main {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("test");
+        config.setTitle("CatShooter");
         config.setForegroundFPS(60);
         config.useVsync(true);
         config.setResizable(false);

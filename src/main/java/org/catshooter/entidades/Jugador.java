@@ -51,8 +51,6 @@ public class Jugador extends Sprite {
         }
     }
     public void update(float dt) {
-        System.out.println("tiempo de invulnerabilidad: "+timer);
-
         actualizarInvencibilidad(dt);
         disparar();
         definirControles(dt);

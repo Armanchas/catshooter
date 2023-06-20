@@ -2,9 +2,11 @@ package org.catshooter.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.core.Juego;
+import org.catshooter.efectos.Efecto;
 import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.lwjgl.opengl.GL20;
@@ -14,24 +16,21 @@ import java.util.HashMap;
 public class PantallaJuego extends PantallaAbstracta{
 
     public Enemigo[] enemigos;
-    public Texture imagen;
-    public Texture imagen2;
+    public Texture enemigoTextura;
+    public Texture enemigoBalaTextura;
+    public Efecto efecto;
     public PantallaJuego(Juego juego) {
         super(juego);
+        enemigoTextura = new Texture("entidades/nave.png");
+        enemigoBalaTextura = new Texture("entidades/bala.png");
         enemigos = new Enemigo[2*4];
-        imagen = new Texture("nave.png");
-        imagen2 = new Texture("bala.png");
+        efecto = new Efecto();
 
+        generarEnemigos();
     }
     @Override
     public void show() {
-        int i = 0;
-        for (int y = 0; y < 2; y++) {
-            for (int x = 0; x < 4; x++) {
-                enemigos[i] = new Enemigo(new Vector2(x*120,y*120),imagen,imagen2);
-                i++;
-            }
-        }
+
     }
     @Override
     public void render(float delta) {
@@ -46,42 +45,84 @@ public class PantallaJuego extends PantallaAbstracta{
                 cambiarPantalla(new PantallaGameOver(juego));
             }
 
-            getJugador().update(delta);
+            actualizarEntidades(delta);
 
-            matarEntidad();
-
-            for (Enemigo enemigo : enemigos) {
-                enemigo.update();
-            }
+            efecto.setSiguienteFrame(efecto.getSiguienteFrame()+delta);
 
             juego.getBatch().begin();
 
+            matarEntidad(juego.getBatch());
 
-            for (Enemigo enemigo : enemigos) {
-                enemigo.getBala().draw(juego.getBatch());
-                if (enemigo.EstaVivo()) {
-                    enemigo.draw(juego.getBatch());
-                }
-                if (!enemigo.EstaVivo() && enemigo.balaEstaFueraDePantalla()) {
-                    enemigo.getBala().setPosition(-2000,2000);
-                }
-            }
+            dibujarJugador();
+            dibujarAliados();
+            dibujarEnemigos();
 
-            if (jugador.isEstaVivo()) {
-                getJugador().draw(juego.getBatch());
-                getJugador().dibujarBala(juego.getBatch());
-
-            }
-
-            for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
-                entry.getValue().draw(juego.getBatch());
-                entry.getValue().dibujarBala(juego.getBatch());
-            }
             juego.getBatch().end();
         }
 
     }
+    public void actualizarEntidades(float delta) {
+        getJugador().update(delta);
 
+        for (Enemigo enemigo : enemigos) {
+            enemigo.update(delta);
+        }
+    }
+    public void dibujarJugador() {
+        if (jugador.isEstaVivo()) {
+            getJugador().draw(juego.getBatch());
+            getJugador().dibujarBala(juego.getBatch());
+        }
+    }
+    public void dibujarAliados() {
+        for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
+            entry.getValue().draw(juego.getBatch());
+            entry.getValue().dibujarBala(juego.getBatch());
+        }
+    }
+    public void generarEnemigos() {
+        int i = 0;
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < 4; x++) {
+                enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+                i++;
+            }
+        }
+    }
+    public void dibujarEnemigos() {
+        for (Enemigo enemigo : enemigos) {
+            enemigo.getBala().draw(juego.getBatch());
+            if (enemigo.EstaVivo()) {
+                enemigo.draw(juego.getBatch());
+            }
+            if (!enemigo.EstaVivo() && enemigo.balaEstaFueraDePantalla()) {
+                enemigo.getBala().setPosition(-2000,2000);
+            }
+        }
+    }
+    public void matarEntidad(SpriteBatch batch) {
+        Rectangle hitboxJugador = jugador.getBoundingRectangle();
+        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
+
+        for (Enemigo enemigo : enemigos) {
+            if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
+                enemigo.setEstaVivo(false);
+                enemigo.setSpeed(0);
+
+                float x = enemigo.getX();
+                float y = enemigo.getY();
+                efecto.animar(batch,x,y);
+            }
+            if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+                jugador.setTimer(3f);
+                jugador.restarVida();
+                jugador.setEsInvencible(true);
+                if (jugador.getVidas() == 0) {
+                    jugador.setEstaVivo(false);
+                }
+            }
+        }
+    }
     @Override
     public void resize(int width, int height) {
 
@@ -101,29 +142,9 @@ public class PantallaJuego extends PantallaAbstracta{
     public void hide() {
 
     }
-
     @Override
     public void dispose() {
-        imagen.dispose();
-        imagen2.dispose();
-        imgBala.dispose();
-    }
-    public void matarEntidad() {
-        Rectangle hitboxJugador = jugador.getBoundingRectangle();
-        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
-
-        for (Enemigo enemigo : enemigos) {
-            if (hitboxBala.overlaps(enemigo.getBoundingRectangle())) {
-                enemigo.setEstaVivo(false);
-            }
-            if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
-                jugador.setTimer(3f);
-                jugador.setEsInvencible(true);
-                jugador.restarVida();
-                if (jugador.getVidas() == 0) {
-                    jugador.setEstaVivo(false);
-                }
-            }
-        }
+        enemigoTextura.dispose();
+        enemigoBalaTextura.dispose();
     }
 }

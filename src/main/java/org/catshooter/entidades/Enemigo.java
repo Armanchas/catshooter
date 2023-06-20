@@ -10,6 +10,7 @@ public class Enemigo extends Sprite{
     private Sprite bala;
     private int speed;
     private boolean estaVivo;
+    private float timer;
     public Enemigo(Vector2 posicion, Texture imagen, Texture imagen2) {
         super(imagen);
         this.posicion = posicion;
@@ -44,7 +45,7 @@ public class Enemigo extends Sprite{
             return false;
         }
     }
-    public void update() {
+    public void update(float dt) {
         mover();
         rebotar();
         disparar();
@@ -60,5 +61,11 @@ public class Enemigo extends Sprite{
     }
     public Sprite getBala() {
         return bala;
+    }
+    public float getTimer() {
+        return timer;
+    }
+    public void setTimer(float timer) {
+        this.timer = timer;
     }
 }

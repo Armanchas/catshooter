@@ -20,14 +20,14 @@ public abstract class PantallaAbstracta implements Screen {
     protected Jugador jugador;
     protected Texture jugadorTextura;
     protected Texture aliadoTextura;
-    protected Texture imgBala;
+    protected Texture balaTextura;
     protected HashMap<String,Jugador> aliados;
     protected Socket socket;
     public PantallaAbstracta(Juego juego) {
         this.juego = juego;
-        imgBala = new Texture("bala.png");
-        jugadorTextura = new Texture("nave.png");
-        aliadoTextura = new Texture("nave.png");
+        balaTextura = new Texture("entidades/bala.png");
+        jugadorTextura = new Texture("entidades/nave.png");
+        aliadoTextura = new Texture("entidades/nave.png");
         aliados = new HashMap<>();
 
         conectarSocket();
@@ -60,12 +60,14 @@ public abstract class PantallaAbstracta implements Screen {
 
     @Override
     public void hide() {
-        jugador = null;
+
     }
 
     @Override
     public void dispose() {
-
+        jugadorTextura.dispose();
+        balaTextura.dispose();
+        aliadoTextura.dispose();
     }
     public void cambiarPantalla(Screen pantalla) {
         PantallaJuego pantallaAnterior = (PantallaJuego) juego.getScreen();
@@ -113,7 +115,7 @@ public abstract class PantallaAbstracta implements Screen {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
-                jugador = new Jugador(jugadorTextura,imgBala);
+                jugador = new Jugador(jugadorTextura, balaTextura);
             }
         });
         socket.on("socketID", new Emitter.Listener() {
@@ -135,7 +137,7 @@ public abstract class PantallaAbstracta implements Screen {
                 try {
                     String id = data.getString("id");
                     System.out.println("Nuevo Jugador ID: " + id);
-                    aliados.put(id, new Jugador(aliadoTextura,imgBala));
+                    aliados.put(id, new Jugador(aliadoTextura, balaTextura));
                 } catch (JSONException e) {
                     System.out.println("Error");
                 }
@@ -179,7 +181,7 @@ public abstract class PantallaAbstracta implements Screen {
                 JSONArray objetos = (JSONArray) objects[0];
                 try {
                     for (int i = 0; i < objetos.length(); i++) {
-                        Jugador aliado = new Jugador(aliadoTextura,imgBala);
+                        Jugador aliado = new Jugador(aliadoTextura, balaTextura);
                         Vector2 posicion = new Vector2();
                         posicion.x =  ((Double) objetos.getJSONObject(i).getDouble("x")).floatValue();
                         posicion.y =  ((Double) objetos.getJSONObject(i).getDouble("y")).floatValue();
