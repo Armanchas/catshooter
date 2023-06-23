@@ -23,8 +23,8 @@ public class Efecto {
         }
     }
     public void animar(SpriteBatch batch, float x, float y) {
-        batch.draw(animacion.getKeyFrame(siguienteFrame),x,y);
-        System.out.println(siguienteFrame);
+        batch.draw(animacion.getKeyFrame(siguienteFrame,true),x,y);
+        //System.out.println(siguienteFrame);
     }
     public void setSiguienteFrame(float siguienteFrame) {
         this.siguienteFrame = siguienteFrame;

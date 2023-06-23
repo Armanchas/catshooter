@@ -4,30 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Jugador extends Sprite {
-    private Sprite bala;
+public class Jugador extends Entidad {
     private int speedBala;
     private int vidas;
-    private boolean estaVivo;
     private boolean esInvencible;
     private float timer;
-    public Jugador(Texture texture, Texture imgBala) {
-        super(texture);
+    public Jugador(Texture imagen, Texture imgBala) {
+        super(imagen,imgBala);
         setScale(1.4f);
         setPosition(400,100);
 
-        estaVivo = true;
         vidas = 3;
+        estaVivo = true;
 
-        //bala
-        bala = new Sprite(imgBala);
         bala.setScale(1.2f);
         this.speedBala = 20;
         bala.setPosition(-20,4000);
     }
-    public void definirControles(float dt) {
+    @Override
+    public void definirMovimiento(float dt) {
         float speed = 200*dt;
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) &&  getX() >= 0) {
@@ -43,6 +39,7 @@ public class Jugador extends Sprite {
             setPosition(getX(), getY()+ (-speed));
         }
     }
+    @Override
     public void disparar() {
         bala.translate(0,speedBala);
 
@@ -50,11 +47,13 @@ public class Jugador extends Sprite {
             bala.setPosition(getX()+16,getY()+16);
         }
     }
+    @Override
     public void update(float dt) {
         actualizarInvencibilidad(dt);
         disparar();
-        definirControles(dt);
+        definirMovimiento(dt);
     }
+
     public void actualizarInvencibilidad(float dt) {
         if (esInvencible && timer < 0) {
             esInvencible = false;
@@ -69,29 +68,21 @@ public class Jugador extends Sprite {
     public void restarVida() {
         vidas--;
     }
-    public void dibujarBala(SpriteBatch batch) {
-        bala.setPosition(bala.getX(), bala.getY());
-        bala.draw(batch);
-    }
-
     public boolean EsInvencible() {
         return esInvencible;
     }
-
     public void setEsInvencible(boolean esInvencible) {
         this.esInvencible = esInvencible;
     }
     public int getVidas() {
         return vidas;
     }
-
     public float getTimer() {
         return timer;
     }
     public void setTimer(float timer) {
         this.timer = timer;
     }
-
     public Sprite getBala() {
         return bala;
     }

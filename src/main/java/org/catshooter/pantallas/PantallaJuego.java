@@ -71,13 +71,13 @@ public class PantallaJuego extends PantallaAbstracta{
     public void dibujarJugador() {
         if (jugador.isEstaVivo()) {
             getJugador().draw(juego.getBatch());
-            getJugador().dibujarBala(juego.getBatch());
+            getJugador().getBala().draw(juego.getBatch());
         }
     }
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
             entry.getValue().draw(juego.getBatch());
-            entry.getValue().dibujarBala(juego.getBatch());
+            entry.getValue().getBala().draw(juego.getBatch());
         }
     }
     public void generarEnemigos() {
