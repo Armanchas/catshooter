@@ -108,6 +108,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
                 enemigo.setEstaVivo(false);
                 enemigo.setSpeed(0);
+                jugador.getBala().setPosition(-2000,2000);
             }
             if (!enemigo.EstaVivo()) {
                 float x = enemigo.getX();
