@@ -21,7 +21,8 @@ public class Explosion extends Efecto {
     }
     @Override
     public void animar(SpriteBatch batch, float x, float y) {
-        batch.draw(animacion.getKeyFrame(siguienteFrame,true),x,y);
-        //System.out.println(siguienteFrame);
+        if (!efectoTermino()) {
+            batch.draw(animacion.getKeyFrame(frameActual), x, y);
+        }
     }
 }

@@ -18,14 +18,15 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public Enemigo[] enemigos;
     public Texture enemigoTextura;
     public Texture enemigoBalaTextura;
-    public Explosion efecto;
+    public Explosion[] explosiones;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
         enemigoBalaTextura = new Texture("entidades/bala.png");
         enemigos = new Enemigo[2*4];
-        efecto = new Explosion();
+        explosiones = new Explosion[enemigos.length];
 
+        llenarEfectos();
         generarEnemigos();
     }
     @Override
@@ -46,8 +47,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             }
 
             actualizarEntidades(delta);
-
-            efecto.setSiguienteFrame(efecto.getSiguienteFrame()+delta);
 
             juego.getBatch().begin();
 
@@ -104,23 +103,33 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         Rectangle hitboxJugador = jugador.getBoundingRectangle();
         Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
 
+        int i = 0;
         for (Enemigo enemigo : enemigos) {
             if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
                 enemigo.setEstaVivo(false);
                 enemigo.setSpeed(0);
-
+            }
+            if (!enemigo.EstaVivo()) {
                 float x = enemigo.getX();
                 float y = enemigo.getY();
-                efecto.animar(batch,x,y);
+
+                explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
+                explosiones[i].animar(batch,x,y);
             }
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
-                jugador.setTimer(3f);
+                jugador.setTimer(2f);
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 if (jugador.getVidas() == 0) {
                     jugador.setEstaVivo(false);
                 }
             }
+            i++;
+        }
+    }
+    public void llenarEfectos() {
+        for (int i = 0; i < explosiones.length; i++) {
+            explosiones[i] = new Explosion();
         }
     }
     @Override
