@@ -6,25 +6,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.core.Juego;
-import org.catshooter.efectos.Efecto;
+import org.catshooter.efectos.Explosion;
 import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
 
-public class PantallaJuego extends PantallaAbstracta{
+public class PantallaJuego extends PantallaJuegoAbstracta {
 
     public Enemigo[] enemigos;
     public Texture enemigoTextura;
     public Texture enemigoBalaTextura;
-    public Efecto efecto;
+    public Explosion efecto;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
         enemigoBalaTextura = new Texture("entidades/bala.png");
         enemigos = new Enemigo[2*4];
-        efecto = new Efecto();
+        efecto = new Explosion();
 
         generarEnemigos();
     }
