@@ -62,11 +62,13 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             actualizarEntidades(delta);
 
+            actualizarPowerUps(delta);
+
             juego.getBatch().begin();
 
             matarEntidad(juego.getBatch());
 
-            generarPowerUps((int)(Math.random()*3));
+            generarPowerUps((int) (Math.random() * 3));
 
             dibujarJugador();
             dibujarAliados();
@@ -156,11 +158,20 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         powerUps[3] = new Invencibilidad(invencibilidadTextura);
     }
     public void generarPowerUps(int random) {
-        float x = (float)(Math.random()*Gdx.graphics.getWidth()-20);
-        float y = (float)(Math.random()*Gdx.graphics.getHeight()-20);
+        float x = (float)(Math.random()*Gdx.graphics.getWidth()-50);
+        float y = (float)(Math.random()*Gdx.graphics.getHeight()-50);
 
-        powerUps[random].setPosition(x,y);
-        powerUps[random].draw(juego.getBatch());
+
+        powerUps[random].setTimer(10f);
+        if (powerUps[random].getTimer() > 0) {
+            powerUps[random].setPosition(x, y);
+            powerUps[random].draw(juego.getBatch());
+        }
+    }
+    public void actualizarPowerUps(float dt) {
+        for (int i = 0; i < powerUps.length; i++) {
+            powerUps[i].update(dt);
+        }
     }
     @Override
     public void resize(int width, int height) {

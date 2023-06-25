@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public abstract class PowerUp extends Sprite {
-    private Texture imagen;
-    private float timer;
+    protected Texture imagen;
+    protected float timer;
 
     public PowerUp(Texture imagen) {
         super(imagen);
@@ -13,6 +13,10 @@ public abstract class PowerUp extends Sprite {
     public PowerUp() {
     }
     public abstract void definirHabilidad();
+    public abstract void update(float dt);
+    public void restarTimer(float dt) {
+        timer-=dt;
+    }
     public float getTimer() {
         return timer;
     }

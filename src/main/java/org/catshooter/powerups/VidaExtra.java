@@ -10,4 +10,10 @@ public class VidaExtra extends PowerUp {
     public void definirHabilidad() {
 
     }
+    @Override
+    public void update(float dt) {
+        if (timer > 0) {
+            restarTimer(dt);
+        }
+    }
 }

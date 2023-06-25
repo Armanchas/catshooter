@@ -11,4 +11,9 @@ public class Invencibilidad extends PowerUp {
     public void definirHabilidad() {
 
     }
+
+    @Override
+    public void update(float dt) {
+
+    }
 }
