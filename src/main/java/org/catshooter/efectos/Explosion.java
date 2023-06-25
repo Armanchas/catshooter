@@ -11,7 +11,7 @@ public class Explosion extends Efecto {
         regiones = new TextureRegion[18];
         establecerFrames();
 
-        animacion = new Animation<>(0.07f,regiones);
+        animacion = new Animation<>(0.06f,regiones);
     }
     @Override
     public void establecerFrames() {
@@ -21,7 +21,7 @@ public class Explosion extends Efecto {
     }
     @Override
     public void animar(SpriteBatch batch, float x, float y) {
-        if (!efectoTermino()) {
+        if (!efectoFinalizo()) {
             batch.draw(animacion.getKeyFrame(frameActual), x, y);
         }
     }

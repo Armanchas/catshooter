@@ -2,7 +2,7 @@ package org.catshooter.core;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import org.catshooter.pantallas.PantallaJuego;
+import org.catshooter.pantallas.juego.PantallaJuego;
 
 public class Juego extends Game {
     private SpriteBatch batch;

@@ -12,7 +12,6 @@ public class GatoFrente implements ApplicationListener {
     Animation<TextureRegion> animacionGato;
     Texture gatoSheet;
     SpriteBatch spriteBatch;
-
     float stateTime;
 
     @Override

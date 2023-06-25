@@ -1,9 +1,11 @@
-package org.catshooter.pantallas;
+package org.catshooter.pantallas.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import org.catshooter.core.Juego;
+import org.catshooter.pantallas.juego.PantallaJuego;
+import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaGameOver extends PantallaAbstracta {

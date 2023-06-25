@@ -15,7 +15,7 @@ public abstract class Efecto {
     }
     public abstract void establecerFrames();
     public abstract void animar(SpriteBatch batch, float x, float y);
-    public boolean efectoTermino() {
+    public boolean efectoFinalizo() {
         if (frameActual > animacion.getAnimationDuration()) {
             return true;
         } else {

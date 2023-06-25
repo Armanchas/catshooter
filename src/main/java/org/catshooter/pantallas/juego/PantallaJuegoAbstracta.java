@@ -1,4 +1,4 @@
-package org.catshooter.pantallas;
+package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -94,7 +94,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
     }
-
     public HashMap<String, Jugador> getAliados() {
         return aliados;
     }

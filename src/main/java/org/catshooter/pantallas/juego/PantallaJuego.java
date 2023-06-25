@@ -1,4 +1,4 @@
-package org.catshooter.pantallas;
+package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,25 +9,39 @@ import org.catshooter.core.Juego;
 import org.catshooter.efectos.Explosion;
 import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
+import org.catshooter.pantallas.menu.PantallaGameOver;
+import org.catshooter.powerups.*;
 import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 public class PantallaJuego extends PantallaJuegoAbstracta {
 
-    public Enemigo[] enemigos;
-    public Texture enemigoTextura;
-    public Texture enemigoBalaTextura;
-    public Explosion[] explosiones;
+    private final Enemigo[] enemigos;
+    private final Texture enemigoTextura;
+    private final Texture enemigoBalaTextura;
+    private final Explosion[] explosiones;
+    private final int enemigosAncho = 4;
+    private final int enemigosAlto = 2;
+    private PowerUp[] powerUps;
+    private Texture vidaExtraTextura, balaPerforadoraTextura, velocidadTextura, invencibilidadTextura;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
         enemigoBalaTextura = new Texture("entidades/bala.png");
-        enemigos = new Enemigo[2*4];
+        vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
+        velocidadTextura = new Texture("power-ups/velocidad.png");
+        balaPerforadoraTextura = new Texture("power-ups/balaPerforadora.png");
+        invencibilidadTextura = new Texture("power-ups/invencibilidad.png");
+
+        enemigos = new Enemigo[enemigosAlto*enemigosAncho];
         explosiones = new Explosion[enemigos.length];
+        powerUps = new PowerUp[4];
 
         llenarEfectos();
         generarEnemigos();
+        crearPowerUps();
     }
     @Override
     public void show() {
@@ -51,6 +65,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             juego.getBatch().begin();
 
             matarEntidad(juego.getBatch());
+
+            generarPowerUps((int)(Math.random()*3));
 
             dibujarJugador();
             dibujarAliados();
@@ -81,8 +97,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void generarEnemigos() {
         int i = 0;
-        for (int y = 0; y < 2; y++) {
-            for (int x = 0; x < 4; x++) {
+        for (int y = 0; y < enemigosAlto   ; y++) {
+            for (int x = 0; x < enemigosAncho; x++) {
                 enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
                 i++;
             }
@@ -132,6 +148,19 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         for (int i = 0; i < explosiones.length; i++) {
             explosiones[i] = new Explosion();
         }
+    }
+    public void crearPowerUps() {
+        powerUps[0] = new VidaExtra(vidaExtraTextura);
+        powerUps[1] = new Velocidad(velocidadTextura);
+        powerUps[2] = new BalaPerforadora(balaPerforadoraTextura);
+        powerUps[3] = new Invencibilidad(invencibilidadTextura);
+    }
+    public void generarPowerUps(int random) {
+        float x = (float)(Math.random()*Gdx.graphics.getWidth()-20);
+        float y = (float)(Math.random()*Gdx.graphics.getHeight()-20);
+
+        powerUps[random].setPosition(x,y);
+        powerUps[random].draw(juego.getBatch());
     }
     @Override
     public void resize(int width, int height) {

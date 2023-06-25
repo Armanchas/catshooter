@@ -1,4 +1,4 @@
-package org.catshooter.pantallas;
+package org.catshooter.pantallas.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

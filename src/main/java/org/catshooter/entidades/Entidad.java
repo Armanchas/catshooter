@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public abstract class Entidad extends Sprite {
-
     protected Texture imgEntidad;
     protected Texture imgBala;
     protected Sprite bala;

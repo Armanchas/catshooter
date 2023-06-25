@@ -6,10 +6,10 @@ import com.badlogic.gdx.audio.Sound;
 
 import java.util.HashMap;
 
-public class ControladorAudio {
+public class GestorDeAudio {
     private final HashMap<String,Music> musica;
     private final HashMap<String,Sound> sonido;
-    public ControladorAudio() {
+    public GestorDeAudio() {
         musica = new HashMap<>();
         sonido = new HashMap<>();
     }
