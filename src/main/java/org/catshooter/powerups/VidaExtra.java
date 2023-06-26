@@ -1,6 +1,7 @@
 package org.catshooter.powerups;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.catshooter.entidades.Jugador;
 
 public class VidaExtra extends PowerUp {
     public VidaExtra(Texture imagen) {
@@ -11,9 +12,7 @@ public class VidaExtra extends PowerUp {
 
     }
     @Override
-    public void update(float dt) {
-        if (timer > 0) {
-            restarTimer(dt);
-        }
+    public void update(float dt, Jugador jugador) {
+
     }
 }

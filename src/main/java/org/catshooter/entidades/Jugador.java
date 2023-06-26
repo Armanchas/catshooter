@@ -10,6 +10,8 @@ public class Jugador extends Entidad {
     private int vidas;
     private boolean esInvencible;
     private float timer;
+    private boolean balaMejoradaActiva;
+
     public Jugador(Texture imagen, Texture imgBala) {
         super(imagen,imgBala);
         setScale(1.4f);
@@ -18,9 +20,11 @@ public class Jugador extends Entidad {
         vidas = 3;
         estaVivo = true;
 
-        bala.setScale(1.2f);
-        this.speedBala = 20;
+        bala.setScale(1f);
+        this.speedBala = 8;
         bala.setPosition(-20,4000);
+
+        timer = 0;
     }
     @Override
     public void definirMovimiento(float dt) {
@@ -52,6 +56,7 @@ public class Jugador extends Entidad {
         actualizarInvencibilidad(dt);
         disparar();
         definirMovimiento(dt);
+        balaMejorada();
     }
 
     public void actualizarInvencibilidad(float dt) {
@@ -60,6 +65,14 @@ public class Jugador extends Entidad {
         }
         if (timer > 0) {
             restarTimer(dt);
+        }
+    }
+    public void balaMejorada() {
+        if (balaMejoradaActiva) {
+            speedBala = 24;
+        }
+        else {
+            speedBala = 8;
         }
     }
     public void restarTimer(float dt) {
@@ -91,5 +104,11 @@ public class Jugador extends Entidad {
     }
     public void setEstaVivo(boolean estaVivo) {
         this.estaVivo = estaVivo;
+    }
+    public boolean isBalaMejoradaActiva() {
+        return balaMejoradaActiva;
+    }
+    public void setBalaMejoradaActiva(boolean balaMejoradaActiva) {
+        this.balaMejoradaActiva = balaMejoradaActiva;
     }
 }

@@ -14,7 +14,6 @@ import org.catshooter.powerups.*;
 import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 public class PantallaJuego extends PantallaJuegoAbstracta {
 
@@ -24,20 +23,21 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Explosion[] explosiones;
     private final int enemigosAncho = 4;
     private final int enemigosAlto = 2;
-    private PowerUp[] powerUps;
-    private Texture vidaExtraTextura, balaPerforadoraTextura, velocidadTextura, invencibilidadTextura;
+    private final PowerUp[] powerUps;
+    private final Texture vidaExtraTextura;
+    private final Texture balaMejoradaTextura;
+    private final Texture velocidadTextura;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
         enemigoBalaTextura = new Texture("entidades/bala.png");
         vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
         velocidadTextura = new Texture("power-ups/velocidad.png");
-        balaPerforadoraTextura = new Texture("power-ups/balaPerforadora.png");
-        invencibilidadTextura = new Texture("power-ups/invencibilidad.png");
+        balaMejoradaTextura = new Texture("power-ups/balaMejorada.png");
 
         enemigos = new Enemigo[enemigosAlto*enemigosAncho];
         explosiones = new Explosion[enemigos.length];
-        powerUps = new PowerUp[4];
+        powerUps = new PowerUp[3];
 
         llenarEfectos();
         generarEnemigos();
@@ -65,11 +65,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             actualizarEntidades(delta);
 
-            actualizarPowerUps(delta);
-
             juego.getBatch().begin();
 
             matarEntidad(juego.getBatch());
+
+            actualizarPowerUps(delta,jugador);
 
             generarPowerUps((int) (Math.random() * 3));
 
@@ -125,19 +125,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         int i = 0;
         for (Enemigo enemigo : enemigos) {
-            if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
-                enemigo.setEstaVivo(false);
-                enemigo.setSpeed(0);
-                hud.añadirPuntaje();
-                jugador.getBala().setPosition(-2000,2000);
-            }
-            if (!enemigo.EstaVivo()) {
-                float x = enemigo.getX();
-                float y = enemigo.getY();
-
-                explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
-                explosiones[i].animar(batch,x,y);
-            }
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
                 hud.restarVida();
                 jugador.restarVida();
@@ -146,6 +133,22 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 if (jugador.getVidas() == 0) {
                     jugador.setEstaVivo(false);
                 }
+            }
+            if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
+                enemigo.setEstaVivo(false);
+                enemigo.setSpeed(0);
+                hud.añadirPuntaje();
+
+                if (!jugador.isBalaMejoradaActiva()) {
+                    jugador.getBala().setPosition(-2000, 2000);
+                }
+            }
+            if (!enemigo.EstaVivo()) {
+                float x = enemigo.getX();
+                float y = enemigo.getY();
+
+                explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
+                explosiones[i].animar(batch,x,y);
             }
             i++;
         }
@@ -158,22 +161,20 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void crearPowerUps() {
         powerUps[0] = new VidaExtra(vidaExtraTextura);
         powerUps[1] = new Velocidad(velocidadTextura);
-        powerUps[2] = new BalaPerforadora(balaPerforadoraTextura);
-        powerUps[3] = new Invencibilidad(invencibilidadTextura);
+        powerUps[2] = new BalaMejorada(balaMejoradaTextura);
     }
     public void generarPowerUps(int random) {
         float x = (float)(Math.random()*Gdx.graphics.getWidth()-50);
         float y = (float)(Math.random()*Gdx.graphics.getHeight()-50);
 
-        if (powerUps[0].getTimer() >= 0) {
-            powerUps[0].setPosition(x, y);
-            //powerUps[0].draw(juego.getBatch());
+        if (powerUps[2].getTimer() <= 0) {
+            powerUps[2].setPosition(200,200);
+            powerUps[2].draw(juego.getBatch());
         }
-
     }
-    public void actualizarPowerUps(float dt) {
+    public void actualizarPowerUps(float dt, Jugador jugador) {
         for (int i = 0; i < powerUps.length; i++) {
-            powerUps[i].update(dt);
+            powerUps[i].update(dt,jugador);
         }
     }
     @Override

@@ -18,6 +18,7 @@ public class Enemigo extends Entidad{
 
         speed = 1;
         bala.setPosition(0,-20);
+        bala.setScale(1f);
         setPosition(posicion.x+200, posicion.y+400);
     }
     @Override

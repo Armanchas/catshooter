@@ -1,6 +1,7 @@
 package org.catshooter.powerups;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.catshooter.entidades.Jugador;
 
 public class Velocidad extends PowerUp {
     public Velocidad(Texture imagen) {
@@ -11,7 +12,7 @@ public class Velocidad extends PowerUp {
 
     }
     @Override
-    public void update(float dt) {
+    public void update(float dt, Jugador jugador) {
 
     }
 }
