@@ -11,12 +11,10 @@ import org.catshooter.core.Juego;
 public abstract class PantallaAbstracta implements Screen {
     protected Juego juego;
     protected SpriteBatch batch;
-    protected Viewport viewport;
     protected Stage stage;
     public PantallaAbstracta(Juego juego) {
         this.juego = juego;
         batch = new SpriteBatch();
-        viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage();
     }
 }

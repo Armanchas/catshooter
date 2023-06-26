@@ -22,8 +22,8 @@ public class Menu extends Actor {
         table = new Table();
 
         establecerBotones(boton1,boton2,boton3,boton4);
-        añadirBotones();
-        añadirListeners();
+        agregarBotones();
+        agregarListeners();
         centrarTable();
         stage.addActor(table);
 
@@ -37,13 +37,13 @@ public class Menu extends Actor {
                 new TextButton(nombreBoton4,skin)
         );
     }
-    public void añadirBotones() {
+    public void agregarBotones() {
         table.add(botones.get(0)).width(200).height(70).space(2).row();
         table.add(botones.get(1)).width(200).height(70).space(2).row();
         table.add(botones.get(2)).width(200).height(70).space(2).row();
         table.add(botones.get(3)).width(200).height(70).space(2).row();
     }
-    public void añadirListeners() {
+    public void agregarListeners() {
         botones.get(0).addListener((new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {

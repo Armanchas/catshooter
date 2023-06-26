@@ -1,4 +1,4 @@
-package org.catshooter.efectos;
+package org.catshooter.animacion;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Texture;

@@ -9,6 +9,7 @@ public class PantallaMenu extends PantallaAbstracta {
     private Menu menu;
     public PantallaMenu(Juego juego) {
         super(juego);
+
         menu = new Menu(stage,"JUGAR","NIVELES","OPCIONES","SALIR");
     }
     @Override
@@ -20,12 +21,11 @@ public class PantallaMenu extends PantallaAbstracta {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        añadirAcciones();
+        acciones();
 
         stage.act();
         stage.draw();
     }
-
     @Override
     public void resize(int i, int i1) {
 
@@ -50,7 +50,7 @@ public class PantallaMenu extends PantallaAbstracta {
     public void dispose() {
 
     }
-    private void añadirAcciones() {
+    private void acciones() {
         if (menu.SePresionoBoton1())
             juego.setScreen(new PantallaJuego(juego));
         if (menu.SePresionoBoton4())
