@@ -54,10 +54,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         actualizarServidor();
 
-        juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
-        hud.getStage().draw();
-
         if(getJugador() != null) {
+
+            juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+            hud.getStage().draw();
 
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
@@ -79,7 +79,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             juego.getBatch().end();
         }
-
     }
     public void actualizarEntidades(float delta) {
         getJugador().update(delta);
