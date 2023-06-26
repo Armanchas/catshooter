@@ -12,10 +12,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Hud {
-    private Stage stage;
+    private final Stage stage;
     private Viewport viewport;
     private int puntos, vidas;
-    private Label puntosLabel, vidasLabel, vidaLabel, puntajeLabel;
+    private Label puntosLabel, contadorVidasLabel, vidasLabel, puntajeLabel;
 
     public Hud(SpriteBatch batch) {
         puntos = 0;
@@ -27,13 +27,13 @@ public class Hud {
         Table table = new Table();
         table.top();
         table.setFillParent(true);
-        puntosLabel = new Label(String.format("%03d", puntos),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        vidasLabel = new Label(String.format("%01d",vidas),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        puntajeLabel = new Label("PUNTAJE",new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-        vidaLabel = new Label("VIDAS",new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        puntosLabel = new Label(String.format("%03d", puntos), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        vidasLabel = new Label(String.format("%01d",vidas), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        puntajeLabel = new Label("PUNTAJE", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        contadorVidasLabel = new Label("VIDAS", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
         table.add(puntajeLabel).expandX().padTop(10);
-        table.add(vidaLabel).expandX().padTop(10);
+        table.add(contadorVidasLabel).expandX().padTop(10);
         table.row();
         table.add(puntosLabel).expandX();
         table.add(vidasLabel).expandX();
@@ -41,13 +41,13 @@ public class Hud {
         stage.addActor(table);
     }
     public void añadirPuntaje() {
-        puntos +=10;
+        puntosLabel.setText(puntos+=10);
     }
     public void restarVida() {
-        vidas--;
+        vidasLabel.setText(vidas-=1);
     }
     public void sumarVida() {
-        vidas++;
+        vidasLabel.setText(vidas+=1);
     }
     public Stage getStage() {
         return stage;

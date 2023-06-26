@@ -140,10 +140,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 explosiones[i].animar(batch,x,y);
             }
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
-                jugador.setTimer(2f);
-                jugador.restarVida();
                 hud.restarVida();
+                jugador.restarVida();
                 jugador.setEsInvencible(true);
+                jugador.setTimer(2f);
                 if (jugador.getVidas() == 0) {
                     jugador.setEstaVivo(false);
                 }
