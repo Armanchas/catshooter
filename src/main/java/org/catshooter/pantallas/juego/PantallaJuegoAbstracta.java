@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import org.catshooter.core.Hud;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
 import org.json.JSONArray;
@@ -23,12 +24,15 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Texture balaTextura;
     protected HashMap<String,Jugador> aliados;
     protected Socket socket;
+    protected Hud hud;
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
         balaTextura = new Texture("entidades/bala.png");
         jugadorTextura = new Texture("entidades/nave.png");
         aliadoTextura = new Texture("entidades/nave.png");
         aliados = new HashMap<>();
+
+        hud = new Hud(juego.getBatch());
 
         conectarSocket();
         eventos();

@@ -54,6 +54,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         actualizarServidor();
 
+        juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
+
         if(getJugador() != null) {
 
             if (!jugador.isEstaVivo()) {
@@ -126,6 +129,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
                 enemigo.setEstaVivo(false);
                 enemigo.setSpeed(0);
+                hud.añadirPuntaje();
                 jugador.getBala().setPosition(-2000,2000);
             }
             if (!enemigo.EstaVivo()) {
@@ -138,6 +142,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
                 jugador.setTimer(2f);
                 jugador.restarVida();
+                hud.restarVida();
                 jugador.setEsInvencible(true);
                 if (jugador.getVidas() == 0) {
                     jugador.setEstaVivo(false);
@@ -161,12 +166,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         float x = (float)(Math.random()*Gdx.graphics.getWidth()-50);
         float y = (float)(Math.random()*Gdx.graphics.getHeight()-50);
 
-
-        powerUps[random].setTimer(10f);
-        if (powerUps[random].getTimer() > 0) {
-            powerUps[random].setPosition(x, y);
-            powerUps[random].draw(juego.getBatch());
+        if (powerUps[0].getTimer() >= 0) {
+            powerUps[0].setPosition(x, y);
+            //powerUps[0].draw(juego.getBatch());
         }
+
     }
     public void actualizarPowerUps(float dt) {
         for (int i = 0; i < powerUps.length; i++) {

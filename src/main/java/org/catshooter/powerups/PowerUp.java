@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public abstract class PowerUp extends Sprite {
     protected Texture imagen;
     protected float timer;
-
+    protected boolean esVisible;
     public PowerUp(Texture imagen) {
         super(imagen);
     }
@@ -22,5 +22,11 @@ public abstract class PowerUp extends Sprite {
     }
     public void setTimer(float timer) {
         this.timer = timer;
+    }
+    public boolean EsVisible() {
+        return esVisible;
+    }
+    public void setEsVisible(boolean esVisible) {
+        this.esVisible = esVisible;
     }
 }
