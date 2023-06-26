@@ -3,6 +3,7 @@ package org.catshooter.core;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.catshooter.pantallas.juego.PantallaJuego;
+import org.catshooter.pantallas.menu.PantallaMenu;
 
 public class Juego extends Game {
     private SpriteBatch batch;
@@ -12,6 +13,6 @@ public class Juego extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        setScreen(new PantallaJuego(this));
+        setScreen(new PantallaMenu(this));
     }
 }
