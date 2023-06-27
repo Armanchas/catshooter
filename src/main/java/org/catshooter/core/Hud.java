@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.catshooter.entidades.Jugador;
 
 public class Hud {
     private final Stage stage;
@@ -43,11 +44,8 @@ public class Hud {
     public void añadirPuntaje() {
         puntosLabel.setText(puntos+=10);
     }
-    public void restarVida() {
-        vidasLabel.setText(vidas-=1);
-    }
-    public void sumarVida() {
-        vidasLabel.setText(vidas+=1);
+    public void modificarVidas(Jugador jugador) {
+        vidasLabel.setText(jugador.getVidas());
     }
     public Stage getStage() {
         return stage;

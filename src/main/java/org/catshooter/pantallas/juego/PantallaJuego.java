@@ -27,6 +27,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture vidaExtraTextura;
     private final Texture balaMejoradaTextura;
     private final Texture velocidadTextura;
+    private float powerUpsCooldown;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
@@ -38,6 +39,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         enemigos = new Enemigo[enemigosAlto*enemigosAncho];
         explosiones = new Explosion[enemigos.length];
         powerUps = new PowerUp[3];
+
+        powerUpsCooldown = 1;
 
         llenarEfectos();
         generarEnemigos();
@@ -56,8 +59,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         if(getJugador() != null) {
 
-            juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
-            hud.getStage().draw();
+            actualizarHud();
+
+            restarPowerUpCooldown(delta);
+
 
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
@@ -65,11 +70,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             actualizarEntidades(delta);
 
+            actualizarPowerUps(delta,jugador);
+
             juego.getBatch().begin();
 
             matarEntidad(juego.getBatch());
-
-            actualizarPowerUps(delta,jugador);
 
             generarPowerUps((int) (Math.random() * 3));
 
@@ -79,6 +84,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             juego.getBatch().end();
         }
+    }
+    public void actualizarHud () {
+        juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
+
+        hud.modificarVidas(jugador);
     }
     public void actualizarEntidades(float delta) {
         getJugador().update(delta);
@@ -101,7 +112,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void generarEnemigos() {
         int i = 0;
-        for (int y = 0; y < enemigosAlto   ; y++) {
+        for (int y = 0; y < enemigosAlto; y++) {
             for (int x = 0; x < enemigosAncho; x++) {
                 enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
                 i++;
@@ -126,7 +137,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         int i = 0;
         for (Enemigo enemigo : enemigos) {
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
-                hud.restarVida();
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 jugador.setTimer(2f);
@@ -164,17 +174,33 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         powerUps[2] = new BalaMejorada(balaMejoradaTextura);
     }
     public void generarPowerUps(int random) {
-        float x = (float)(Math.random()*Gdx.graphics.getWidth()-50);
-        float y = (float)(Math.random()*Gdx.graphics.getHeight()-50);
+        PowerUp powerUp = powerUps[random];
 
-        if (powerUps[2].getTimer() <= 0) {
-            powerUps[2].setPosition(200,200);
-            powerUps[2].draw(juego.getBatch());
+        float x = (float)(Math.random()*Gdx.graphics.getWidth());
+        float y = (float)(Math.random()*Gdx.graphics.getHeight());
+
+        if (powerUp.EstaEnPantalla()) {
+            powerUp.draw(juego.getBatch());
+        }
+        if (powerUpsCooldown <= 0) {
+            powerUpsCooldown = 15;
+            powerUp.setEstaEnPantalla(true);
+            powerUp.setPosition(x, y);
+            powerUp.setCooldown(5);
+        }
+        if (powerUp.getCooldown() <= 0) {
+            powerUp.setEstaEnPantalla(false);
+            powerUp.setPosition(-2000,4000);
         }
     }
     public void actualizarPowerUps(float dt, Jugador jugador) {
         for (int i = 0; i < powerUps.length; i++) {
-            powerUps[i].update(dt,jugador);
+            powerUps[i].aplicarHabilidad(dt,jugador);
+        }
+    }
+    public void restarPowerUpCooldown(float dt) {
+        if (powerUpsCooldown >= 0) {
+            powerUpsCooldown -= dt;
         }
     }
     @Override
@@ -200,5 +226,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void dispose() {
         enemigoTextura.dispose();
         enemigoBalaTextura.dispose();
+        vidaExtraTextura.dispose();
+        velocidadTextura.dispose();
+        balaMejoradaTextura.dispose();
     }
 }

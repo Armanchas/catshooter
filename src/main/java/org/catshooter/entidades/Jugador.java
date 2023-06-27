@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import org.catshooter.core.Juego;
 
 public class Jugador extends Entidad {
     private int speedBala;
     private int vidas;
+    private float speed;
     private boolean esInvencible;
     private float timer;
     private boolean balaMejoradaActiva;
@@ -17,6 +19,7 @@ public class Jugador extends Entidad {
         setScale(1.4f);
         setPosition(400,100);
 
+        speed = 200*Gdx.graphics.getDeltaTime();
         vidas = 3;
         estaVivo = true;
 
@@ -28,8 +31,6 @@ public class Jugador extends Entidad {
     }
     @Override
     public void definirMovimiento(float dt) {
-        float speed = 200*dt;
-
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) &&  getX() >= 0) {
             setPosition(getX() + (-speed), getY());
         }
@@ -80,6 +81,15 @@ public class Jugador extends Entidad {
     }
     public void restarVida() {
         vidas--;
+    }
+    public void sumarVida() {
+        vidas++;
+    }
+    public float getSpeed() {
+        return speed;
+    }
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
     public boolean EsInvencible() {
         return esInvencible;

@@ -8,24 +8,23 @@ public class BalaMejorada extends PowerUp {
     public BalaMejorada(Texture imagen) {
         super(imagen);
     }
-
     @Override
-    public void definirHabilidad() {
-
-    }
-    @Override
-    public void update(float dt, Jugador jugador) {
+    public void aplicarHabilidad(float dt, Jugador jugador) {
         Rectangle jugadorHitbox = jugador.getBoundingRectangle();
 
+        if (cooldown > 0 && estaEnPantalla) {
+            restarCooldown(dt);
+        }
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
-            timer = 10;
+            duracionHabilidad = 5;
+            setEstaEnPantalla(false);
             setPosition(2000,2000);
             jugador.setBalaMejoradaActiva(true);
         }
-        if (timer > 0) {
+        if (duracionHabilidad > 0) {
             restarTimer(dt);
         }
-        if (timer <= 0) {
+        if (duracionHabilidad <= 0) {
             jugador.setBalaMejoradaActiva(false);
         }
     }

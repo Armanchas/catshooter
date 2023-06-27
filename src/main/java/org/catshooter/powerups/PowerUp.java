@@ -5,21 +5,38 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import org.catshooter.entidades.Jugador;
 
 public abstract class PowerUp extends Sprite {
-    protected float timer;
+    protected float cooldown;
+    protected float duracionHabilidad;
+    protected boolean estaEnPantalla;
     public PowerUp(Texture imagen) {
         super(imagen);
 
-        timer = 0;
+        cooldown = 0;
+        duracionHabilidad = 0;
     }
-    public abstract void definirHabilidad();
-    public abstract void update(float dt, Jugador jugador);
+    public abstract void aplicarHabilidad(float dt, Jugador jugador);
     public void restarTimer(float dt) {
-        timer-=dt;
+        duracionHabilidad -=dt;
     }
-    public float getTimer() {
-        return timer;
+    public void restarCooldown(float dt) {
+        cooldown-=dt;
     }
-    public void setTimer(float timer) {
-        this.timer = timer;
+    public float getDuracionHabilidad() {
+        return duracionHabilidad;
+    }
+    public void setDuracionHabilidad(float duracionHabilidad) {
+        this.duracionHabilidad = duracionHabilidad;
+    }
+    public boolean EstaEnPantalla() {
+        return estaEnPantalla;
+    }
+    public void setEstaEnPantalla(boolean estaEnPantalla) {
+        this.estaEnPantalla = estaEnPantalla;
+    }
+    public float getCooldown() {
+        return cooldown;
+    }
+    public void setCooldown(float cooldown) {
+        this.cooldown = cooldown;
     }
 }
