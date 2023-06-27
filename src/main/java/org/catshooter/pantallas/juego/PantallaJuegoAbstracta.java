@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import org.catshooter.controladores.GestorDeAudio;
 import org.catshooter.core.Hud;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
@@ -24,6 +25,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Texture balaTextura;
     protected HashMap<String,Jugador> aliados;
     protected Socket socket;
+    protected GestorDeAudio gestorDeAudio;
     protected Hud hud;
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
@@ -32,7 +34,9 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         aliadoTextura = new Texture("entidades/nave.png");
         aliados = new HashMap<>();
 
-        hud = new Hud(juego.getBatch());
+        hud = new Hud(Juego.BATCH);
+
+        gestorDeAudio = new GestorDeAudio();
 
         conectarSocket();
         eventos();

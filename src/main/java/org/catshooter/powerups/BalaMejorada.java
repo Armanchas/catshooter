@@ -16,7 +16,8 @@ public class BalaMejorada extends PowerUp {
             restarCooldown(dt);
         }
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
-            duracionHabilidad = 5;
+            reproducirSonido();
+            duracionHabilidad = 8;
             setEstaEnPantalla(false);
             setPosition(2000,2000);
             jugador.setBalaMejoradaActiva(true);
@@ -27,5 +28,9 @@ public class BalaMejorada extends PowerUp {
         if (duracionHabilidad <= 0) {
             jugador.setBalaMejoradaActiva(false);
         }
+    }
+    @Override
+    public void dispose() {
+        gestorDeAudio.getSonido("powerUp").dispose();
     }
 }

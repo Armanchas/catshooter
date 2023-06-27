@@ -16,6 +16,7 @@ public class Velocidad extends PowerUp {
             restarCooldown(dt);
         }
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
+            reproducirSonido();
             duracionHabilidad = 5;
             setEstaEnPantalla(false);
             setPosition(2000,2000);
@@ -27,5 +28,9 @@ public class Velocidad extends PowerUp {
         if (duracionHabilidad <= 0) {
             jugador.setSpeed(200*dt);
         }
+    }
+    @Override
+    public void dispose() {
+        gestorDeAudio.getSonido("powerUp").dispose();
     }
 }

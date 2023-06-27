@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.core.Juego;
+import org.catshooter.efectos.Chispa;
 import org.catshooter.efectos.Explosion;
 import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
@@ -28,6 +29,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture balaMejoradaTextura;
     private final Texture velocidadTextura;
     private float powerUpsCooldown;
+    private Chispa chispa;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
@@ -41,6 +43,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         powerUps = new PowerUp[3];
 
         powerUpsCooldown = 1;
+
+        chispa = new Chispa();
 
         llenarEfectos();
         generarEnemigos();
@@ -63,30 +67,33 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             restarPowerUpCooldown(delta);
 
-
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
             }
 
             actualizarEntidades(delta);
 
-            actualizarPowerUps(delta,jugador);
+            actualizarPowerUps(delta, jugador);
 
-            juego.getBatch().begin();
+            Juego.BATCH.begin();
 
-            matarEntidad(juego.getBatch());
+            matarEntidad(Juego.BATCH);
 
-            generarPowerUps((int) (Math.random() * 3));
+            int random = (int) (Math.random() * 3);
+
+            generarPowerUps(random);
+
+            animarChispa();
 
             dibujarJugador();
             dibujarAliados();
             dibujarEnemigos();
 
-            juego.getBatch().end();
+            Juego.BATCH.end();
         }
     }
     public void actualizarHud () {
-        juego.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+        Juego.BATCH.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().draw();
 
         hud.modificarVidas(jugador);
@@ -100,14 +107,14 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void dibujarJugador() {
         if (jugador.isEstaVivo()) {
-            getJugador().draw(juego.getBatch());
-            getJugador().getBala().draw(juego.getBatch());
+            getJugador().draw(Juego.BATCH);
+            getJugador().getBala().draw(Juego.BATCH);
         }
     }
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
-            entry.getValue().draw(juego.getBatch());
-            entry.getValue().getBala().draw(juego.getBatch());
+            entry.getValue().draw(Juego.BATCH);
+            entry.getValue().getBala().draw(Juego.BATCH);
         }
     }
     public void generarEnemigos() {
@@ -121,9 +128,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void dibujarEnemigos() {
         for (Enemigo enemigo : enemigos) {
-            enemigo.getBala().draw(juego.getBatch());
+            enemigo.getBala().draw(Juego.BATCH);
             if (enemigo.EstaVivo()) {
-                enemigo.draw(juego.getBatch());
+                enemigo.draw(Juego.BATCH);
             }
             if (!enemigo.EstaVivo() && enemigo.balaEstaFueraDePantalla()) {
                 enemigo.getBala().setPosition(-2000,2000);
@@ -140,6 +147,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 jugador.setTimer(2f);
+
                 if (jugador.getVidas() == 0) {
                     jugador.setEstaVivo(false);
                 }
@@ -180,17 +188,17 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         float y = (float)(Math.random()*Gdx.graphics.getHeight());
 
         if (powerUp.EstaEnPantalla()) {
-            powerUp.draw(juego.getBatch());
+            powerUp.draw(Juego.BATCH);
         }
         if (powerUpsCooldown <= 0) {
-            powerUpsCooldown = 15;
             powerUp.setEstaEnPantalla(true);
             powerUp.setPosition(x, y);
+            powerUpsCooldown = 15;
             powerUp.setCooldown(5);
         }
         if (powerUp.getCooldown() <= 0) {
             powerUp.setEstaEnPantalla(false);
-            powerUp.setPosition(-2000,4000);
+            powerUp.setPosition(2000,2000);
         }
     }
     public void actualizarPowerUps(float dt, Jugador jugador) {
@@ -201,6 +209,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void restarPowerUpCooldown(float dt) {
         if (powerUpsCooldown >= 0) {
             powerUpsCooldown -= dt;
+        }
+    }
+    public void animarChispa() {
+        if (jugador.isBalaMejoradaActiva()) {
+            chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
+            chispa.animar(Juego.BATCH, jugador.getBala().getX()-9, jugador.getBala().getY()-45);
         }
     }
     @Override

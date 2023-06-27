@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.catshooter.core.Juego;
+import org.catshooter.efectos.Chispa;
 
 public class Jugador extends Entidad {
     private int speedBala;
@@ -13,10 +15,9 @@ public class Jugador extends Entidad {
     private boolean esInvencible;
     private float timer;
     private boolean balaMejoradaActiva;
-
     public Jugador(Texture imagen, Texture imgBala) {
         super(imagen,imgBala);
-        setScale(1.4f);
+        setScale(1.2f);
         setPosition(400,100);
 
         speed = 200*Gdx.graphics.getDeltaTime();
@@ -31,16 +32,16 @@ public class Jugador extends Entidad {
     }
     @Override
     public void definirMovimiento(float dt) {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) &&  getX() >= 0) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) &&  getX() >= 4) {
             setPosition(getX() + (-speed), getY());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && getX() <= Gdx.graphics.getWidth()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && getX() <= Gdx.graphics.getWidth()-52) {
             setPosition(getX() + (speed), getY());
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && getY() <= Gdx.graphics.getHeight()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && getY() <= Gdx.graphics.getHeight()-38) {
             setPosition(getX(), getY()+ (speed));
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && getY() >= 0) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && getY() >= 4) {
             setPosition(getX(), getY()+ (-speed));
         }
     }
@@ -70,10 +71,12 @@ public class Jugador extends Entidad {
     }
     public void balaMejorada() {
         if (balaMejoradaActiva) {
-            speedBala = 24;
+            speedBala = 14;
+            bala.setScale(0);
         }
         else {
             speedBala = 8;
+            bala.setScale(1f);
         }
     }
     public void restarTimer(float dt) {
