@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.catshooter.animacion.AnimacionDerecha;
+import org.catshooter.animacion.AnimacionFrente;
+import org.catshooter.animacion.AnimacionIzquierda;
 import org.catshooter.core.Juego;
-import org.catshooter.efectos.Chispa;
 
 public class Jugador extends Entidad {
     private int speedBala;
@@ -60,7 +61,6 @@ public class Jugador extends Entidad {
         definirMovimiento(dt);
         balaMejorada();
     }
-
     public void actualizarInvencibilidad(float dt) {
         if (esInvencible && timer < 0) {
             esInvencible = false;

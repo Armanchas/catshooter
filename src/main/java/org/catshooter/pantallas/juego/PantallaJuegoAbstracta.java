@@ -72,14 +72,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
     }
-    public HashMap<String, Jugador> getAliados() {
-        return aliados;
-    }
-
-    public Jugador getJugador() {
-        return jugador;
-    }
-
     public void conectarSocket() {
         try {
             socket = IO.socket("http://localhost:3000");

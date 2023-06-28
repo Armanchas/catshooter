@@ -30,8 +30,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture balaMejoradaTextura;
     private final Texture velocidadTextura;
     private float powerUpsCooldown;
+    private float enemigosCooldown;
     private Chispa chispa;
-
     private AnimacionFrente animacionFrente;
     private AnimacionDerecha animacionDerecha;
     private AnimacionIzquierda animacionIzquierda;
@@ -52,6 +52,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         animacionIzquierda = new AnimacionIzquierda();
 
         powerUpsCooldown = 1;
+        enemigosCooldown = 0;
 
         chispa = new Chispa();
 
@@ -70,11 +71,13 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         actualizarServidor();
 
-        if(getJugador() != null) {
+        if(jugador != null) {
 
             actualizarHud();
 
             restarPowerUpCooldown(delta);
+
+            restarEnemigosCooldown(delta);
 
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
@@ -98,6 +101,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             dibujarAliados();
             dibujarEnemigos();
 
+            respawnearEnemigos();
+
             Juego.BATCH.end();
         }
     }
@@ -108,7 +113,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         hud.modificarVidas(jugador);
     }
     public void actualizarEntidades(float delta) {
-        getJugador().update(delta);
+        jugador.update(delta);
 
         for (Enemigo enemigo : enemigos) {
             enemigo.update(delta);
@@ -129,10 +134,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 animacionFrente.animar(Juego.BATCH, jugador.getX(), jugador.getY());
             }
         }
-            getJugador().getBala().draw(Juego.BATCH);
+            jugador.getBala().draw(Juego.BATCH);
     }
     public void dibujarAliados() {
-        for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
+        for(HashMap.Entry<String, Jugador> entry : aliados.entrySet()){
             if (entry.getValue().isEstaVivo()) {
                 if (entry.getValue().getDireccion() == 1){
                     animacionIzquierda.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
@@ -200,6 +205,22 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             i++;
         }
     }
+    public void respawnearEnemigos() {
+        if (enemigosMuertos() && enemigosCooldown <= 0) {
+            enemigosCooldown = 5;
+        }
+        if (enemigosMuertos() && enemigosCooldown <= 1) {
+            generarEnemigos();
+        }
+    }
+    public boolean enemigosMuertos() {
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo.EstaVivo()) {
+                return false;
+            }
+        }
+        return true;
+    }
     public void llenarEfectos() {
         for (int i = 0; i < explosiones.length; i++) {
             explosiones[i] = new Explosion();
@@ -239,6 +260,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void restarPowerUpCooldown(float dt) {
         if (powerUpsCooldown >= 0) {
             powerUpsCooldown -= dt;
+        }
+    }
+    public void restarEnemigosCooldown(float dt) {
+        if (enemigosCooldown >= 0) {
+            enemigosCooldown -= dt;
         }
     }
     public void animarChispa() {
