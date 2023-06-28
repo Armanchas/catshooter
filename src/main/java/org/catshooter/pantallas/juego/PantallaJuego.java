@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.catshooter.animacion.AnimacionFrente;
-import org.catshooter.animacion.GatoDerecha;
-import org.catshooter.animacion.GatoFrente;
-import org.catshooter.animacion.GatoIzquierda;
+import org.catshooter.animacion.*;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
 import org.catshooter.efectos.Explosion;
@@ -39,6 +36,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private GatoDerecha gatoDerecha;
 
     private AnimacionFrente animacionFrente;
+    private AnimacionDerecha animacionDerecha;
+    private AnimacionIzquierda animacionIzquierda;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
@@ -52,6 +51,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         powerUps = new PowerUp[3];
 
         animacionFrente = new AnimacionFrente();
+        animacionDerecha = new AnimacionDerecha();
+        animacionIzquierda = new AnimacionIzquierda();
 
         powerUpsCooldown = 1;
 
@@ -118,9 +119,18 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void dibujarJugador() {
         animacionFrente.setStateTime(animacionFrente.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionDerecha.setStateTime(animacionDerecha.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionIzquierda.setStateTime(animacionIzquierda.getStateTime() + Gdx.graphics.getDeltaTime());
 
         if (jugador.isEstaVivo()) {
-            animacionFrente.animar(Juego.BATCH,jugador.getX(),jugador.getY());
+            if (jugador.getDireccion() == 1){
+                animacionIzquierda.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+            }
+            else if (jugador.getDireccion() == 2){
+                animacionDerecha.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+            }else {
+                animacionFrente.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+            }
         }
             getJugador().getBala().draw(Juego.BATCH);
     }
@@ -257,5 +267,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         vidaExtraTextura.dispose();
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
+        gatoFrente.dispose();
+        gatoDerecha.dispose();
+        gatoIzquierda.dispose();
     }
 }
