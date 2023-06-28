@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.catshooter.animacion.AnimacionFrente;
 import org.catshooter.animacion.GatoDerecha;
 import org.catshooter.animacion.GatoFrente;
 import org.catshooter.animacion.GatoIzquierda;
@@ -36,6 +37,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private GatoFrente gatoFrente;
     private GatoIzquierda gatoIzquierda;
     private GatoDerecha gatoDerecha;
+
+    private AnimacionFrente animacionFrente;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
@@ -47,6 +50,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         enemigos = new Enemigo[enemigosAlto*enemigosAncho];
         explosiones = new Explosion[enemigos.length];
         powerUps = new PowerUp[3];
+
+        animacionFrente = new AnimacionFrente();
 
         powerUpsCooldown = 1;
 
@@ -112,17 +117,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void dibujarJugador() {
+        animacionFrente.setStateTime(animacionFrente.getStateTime() + Gdx.graphics.getDeltaTime());
+
         if (jugador.isEstaVivo()) {
-            getJugador().draw(Juego.BATCH);
-            /*if (jugador.getDireccion() == 1) {
-                gatoIzquierda.draw(Juego.BATCH, jugador.getX(), jugador.getY());
-            } else if (jugador.getDireccion() == 2) {
-                gatoDerecha.draw(Juego.BATCH, jugador.getX(), jugador.getY());
-            } else {
-                gatoFrente.draw(Juego.BATCH, jugador.getX(), jugador.getY());
-            }*/
-            getJugador().getBala().draw(Juego.BATCH);
+            animacionFrente.animar(Juego.BATCH,jugador.getX(),jugador.getY());
         }
+            getJugador().getBala().draw(Juego.BATCH);
     }
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
@@ -197,22 +197,23 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void generarPowerUps(int random) {
         PowerUp powerUp = powerUps[random];
 
-        float x = (float)(Math.random()*Gdx.graphics.getWidth());
-        float y = (float)(Math.random()*Gdx.graphics.getHeight());
+        float x = (float)(Math.random()*680)+120;
+        float y = (float)(Math.random()*200)+100;
 
         if (powerUp.EstaEnPantalla()) {
             powerUp.draw(Juego.BATCH);
-        }
-        if (powerUpsCooldown <= 0) {
-            powerUp.setEstaEnPantalla(true);
-            powerUp.setPosition(x, y);
-            powerUpsCooldown = 15;
-            powerUp.setCooldown(5);
         }
         if (powerUp.getCooldown() <= 0) {
             powerUp.setEstaEnPantalla(false);
             powerUp.setPosition(2000,2000);
         }
+        if (powerUpsCooldown <= 0) {
+            powerUp.setPosition(x, y);
+            powerUp.setEstaEnPantalla(true);
+            powerUpsCooldown = 15;
+            powerUp.setCooldown(5);
+        }
+
     }
     public void actualizarPowerUps(float dt, Jugador jugador) {
         for (int i = 0; i < powerUps.length; i++) {
