@@ -28,7 +28,7 @@ public class AnimacionFrente {
         }
     }
     public void animar(SpriteBatch batch, float x, float y) {
-        batch.draw(animacionGato.getKeyFrame(stateTime,true), x, y,46,39);
+        batch.draw(animacionGato.getKeyFrame(stateTime,true), x, y,56,49);
     }
     public float getStateTime() {
         return stateTime;

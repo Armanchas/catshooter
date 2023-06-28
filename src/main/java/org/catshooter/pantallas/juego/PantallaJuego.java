@@ -31,9 +31,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture velocidadTextura;
     private float powerUpsCooldown;
     private Chispa chispa;
-    private GatoFrente gatoFrente;
-    private GatoIzquierda gatoIzquierda;
-    private GatoDerecha gatoDerecha;
 
     private AnimacionFrente animacionFrente;
     private AnimacionDerecha animacionDerecha;
@@ -136,7 +133,16 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : getAliados().entrySet()){
-            entry.getValue().draw(Juego.BATCH);
+            if (entry.getValue().isEstaVivo()) {
+                if (entry.getValue().getDireccion() == 1){
+                    animacionIzquierda.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                }
+                else if (entry.getValue().getDireccion() == 2){
+                    animacionDerecha.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                }else {
+                    animacionFrente.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                }
+            }
             entry.getValue().getBala().draw(Juego.BATCH);
         }
     }
@@ -267,8 +273,5 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         vidaExtraTextura.dispose();
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
-        gatoFrente.dispose();
-        gatoDerecha.dispose();
-        gatoIzquierda.dispose();
     }
 }
