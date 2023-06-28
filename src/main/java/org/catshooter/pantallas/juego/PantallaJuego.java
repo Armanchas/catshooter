@@ -257,8 +257,5 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         vidaExtraTextura.dispose();
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
-        gatoFrente.dispose();
-        gatoDerecha.dispose();
-        gatoIzquierda.dispose();
     }
 }
