@@ -124,4 +124,20 @@ public class Jugador extends Entidad {
     public void setBalaMejoradaActiva(boolean balaMejoradaActiva) {
         this.balaMejoradaActiva = balaMejoradaActiva;
     }
+
+    public int getDireccion() {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            return 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            return 2;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            return 3;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            return 4;
+        }
+        return 0;
+    }
 }

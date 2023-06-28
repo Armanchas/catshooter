@@ -60,4 +60,8 @@ public class GatoFrente implements ApplicationListener {
         spriteBatch.dispose();
         gatoSheet.dispose();
     }
+
+    public void draw(SpriteBatch batch, float x, float y) {
+        batch.draw(animacionGato.getKeyFrame(stateTime), x, y);
+    }
 }

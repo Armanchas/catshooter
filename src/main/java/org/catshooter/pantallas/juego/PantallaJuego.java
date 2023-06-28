@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.catshooter.animacion.GatoDerecha;
+import org.catshooter.animacion.GatoFrente;
+import org.catshooter.animacion.GatoIzquierda;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
 import org.catshooter.efectos.Explosion;
@@ -30,6 +33,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture velocidadTextura;
     private float powerUpsCooldown;
     private Chispa chispa;
+    private GatoFrente gatoFrente;
+    private GatoIzquierda gatoIzquierda;
+    private GatoDerecha gatoDerecha;
     public PantallaJuego(Juego juego) {
         super(juego);
         enemigoTextura = new Texture("entidades/nave.png");
@@ -108,6 +114,13 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void dibujarJugador() {
         if (jugador.isEstaVivo()) {
             getJugador().draw(Juego.BATCH);
+            /*if (jugador.getDireccion() == 1) {
+                gatoIzquierda.draw(Juego.BATCH, jugador.getX(), jugador.getY());
+            } else if (jugador.getDireccion() == 2) {
+                gatoDerecha.draw(Juego.BATCH, jugador.getX(), jugador.getY());
+            } else {
+                gatoFrente.draw(Juego.BATCH, jugador.getX(), jugador.getY());
+            }*/
             getJugador().getBala().draw(Juego.BATCH);
         }
     }
@@ -243,5 +256,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         vidaExtraTextura.dispose();
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
+        gatoFrente.dispose();
+        gatoDerecha.dispose();
+        gatoIzquierda.dispose();
     }
 }
