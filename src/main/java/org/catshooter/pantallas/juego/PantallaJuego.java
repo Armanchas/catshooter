@@ -211,6 +211,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
         if (enemigosMuertos() && enemigosCooldown <= 1) {
             generarEnemigos();
+            llenarEfectos();
         }
     }
     public boolean enemigosMuertos() {
