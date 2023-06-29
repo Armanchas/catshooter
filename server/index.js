@@ -6,8 +6,17 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 var jugadores = [];
+var enemigos = [];
 
 function jugador(id,x,y,xBala,yBala) {
+this.id = id;
+this.x = x;
+this.y = y;
+this.xBala = xBala;
+this.yBala = yBala;
+}
+
+function enemigo(id,x,y,xBala,yBala) {
 this.id = id;
 this.x = x;
 this.y = y;
@@ -49,6 +58,8 @@ io.on('connection', (socket) => {
       }
       }
       });
+
+
 
   jugadores.push(new jugador(socket.id,0,0,0,0));
 });

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.socket.emitter.Emitter;
 import org.catshooter.animacion.*;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
@@ -13,6 +14,7 @@ import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.pantallas.menu.PantallaGameOver;
 import org.catshooter.powerups.*;
+import org.json.JSONArray;
 import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
@@ -26,6 +28,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final int enemigosAncho = 4;
     private final int enemigosAlto = 2;
     private final PowerUp[] powerUps;
+    private PowerUp powerUpEnPantalla;
     private final Texture vidaExtraTextura;
     private final Texture balaMejoradaTextura;
     private final Texture velocidadTextura;
@@ -94,6 +97,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             int random = (int) (Math.random() * 3);
 
             generarPowerUps(random);
+
+            if (powerUpEnPantalla != null) {
+                powerUpEnPantalla.draw(Juego.BATCH);
+            }
 
             animarChispa();
 
@@ -239,7 +246,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         float y = (float)(Math.random()*200)+100;
 
         if (powerUp.EstaEnPantalla()) {
-            powerUp.draw(Juego.BATCH);
+            powerUpEnPantalla = powerUp;
         }
         if (powerUp.getCooldown() <= 0) {
             powerUp.setEstaEnPantalla(false);
@@ -273,6 +280,21 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
             chispa.animar(Juego.BATCH, jugador.getBala().getX()-9, jugador.getBala().getY()-45);
         }
+    }
+    public void socketEnemigos() {
+        socket.on("enemigos", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                JSONArray objetos = (JSONArray) objects[0];
+                int i = 0;
+                for (int y = 0; y < enemigosAlto; y++) {
+                    for (int x = 0; x < enemigosAncho; x++) {
+                        enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+                        i++;
+                    }
+                }
+            }
+        });
     }
     @Override
     public void resize(int width, int height) {
