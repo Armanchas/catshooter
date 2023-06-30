@@ -16,6 +16,6 @@ public class Chispa extends Efecto{
     }
     @Override
     public void animar(SpriteBatch batch, float x, float y) {
-        batch.draw(animacion.getKeyFrame(frameActual,true), x, y);
+        batch.draw(animacion.getKeyFrame(frameActual,true), x, y,40,120);
     }
 }

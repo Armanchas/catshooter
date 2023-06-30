@@ -16,8 +16,7 @@ this.xBala = xBala;
 this.yBala = yBala;
 }
 
-function enemigo(id,x,y,xBala,yBala) {
-this.id = id;
+function enemigo(x,y,xBala,yBala) {
 this.x = x;
 this.y = y;
 this.xBala = xBala;
@@ -41,7 +40,7 @@ io.on('connection', (socket) => {
   		if (jugadores[i].id == socket.id) {
   		jugadores.splice(i,1);
       }
-  		}
+  	}
   	});
 
   socket.on('actualizarPosiciones', (data) => {
@@ -58,8 +57,6 @@ io.on('connection', (socket) => {
       }
       }
       });
-
-
 
   jugadores.push(new jugador(socket.id,0,0,0,0));
 });

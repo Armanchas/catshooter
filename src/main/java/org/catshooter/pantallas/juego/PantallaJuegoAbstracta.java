@@ -9,6 +9,7 @@ import io.socket.emitter.Emitter;
 import org.catshooter.controladores.GestorDeAudio;
 import org.catshooter.core.Hud;
 import org.catshooter.core.Juego;
+import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +24,11 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Texture jugadorTextura;
     protected Texture aliadoTextura;
     protected Texture balaTextura;
+    protected Texture enemigoTextura;
+    protected Texture enemigoBalaTextura;
+    protected Enemigo[] enemigos;
+    protected int enemigosAncho = 4;
+    protected int enemigosAlto = 2;
     protected HashMap<String,Jugador> aliados;
     protected Socket socket;
     protected GestorDeAudio gestorDeAudio;
@@ -32,6 +38,8 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         balaTextura = new Texture("entidades/bala.png");
         jugadorTextura = new Texture("entidades/nave.png");
         aliadoTextura = new Texture("entidades/nave.png");
+        enemigoTextura = new Texture("entidades/nave.png");
+        enemigoBalaTextura = new Texture("entidades/bala.png");
         aliados = new HashMap<>();
 
         hud = new Hud(Juego.BATCH);

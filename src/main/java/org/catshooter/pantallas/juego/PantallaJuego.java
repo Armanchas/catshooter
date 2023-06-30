@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.socket.emitter.Emitter;
 import org.catshooter.animacion.*;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
@@ -14,19 +13,12 @@ import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.pantallas.menu.PantallaGameOver;
 import org.catshooter.powerups.*;
-import org.json.JSONArray;
 import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
 
 public class PantallaJuego extends PantallaJuegoAbstracta {
-
-    private final Enemigo[] enemigos;
-    private final Texture enemigoTextura;
-    private final Texture enemigoBalaTextura;
     private final Explosion[] explosiones;
-    private final int enemigosAncho = 4;
-    private final int enemigosAlto = 2;
     private final PowerUp[] powerUps;
     private PowerUp powerUpEnPantalla;
     private final Texture vidaExtraTextura;
@@ -40,13 +32,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private AnimacionIzquierda animacionIzquierda;
     public PantallaJuego(Juego juego) {
         super(juego);
-        enemigoTextura = new Texture("entidades/nave.png");
-        enemigoBalaTextura = new Texture("entidades/bala.png");
         vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
         velocidadTextura = new Texture("power-ups/velocidad.png");
         balaMejoradaTextura = new Texture("power-ups/balaMejorada.png");
 
-        enemigos = new Enemigo[enemigosAlto*enemigosAncho];
+        enemigos = new Enemigo[enemigosAlto * enemigosAncho];
         explosiones = new Explosion[enemigos.length];
         powerUps = new PowerUp[3];
 
@@ -74,7 +64,15 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         actualizarServidor();
 
-        if(jugador != null) {
+        if(jugador != null && enemigos[0] != null
+                && enemigos[1] != null
+                && enemigos[2] != null
+                && enemigos[3] != null
+                && enemigos[4] != null
+                && enemigos[5] != null
+                && enemigos[6] != null
+                && enemigos[7] != null
+        ) {
 
             actualizarHud();
 
@@ -101,7 +99,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             if (powerUpEnPantalla != null) {
                 powerUpEnPantalla.draw(Juego.BATCH);
             }
-
             animarChispa();
 
             dibujarJugador();
@@ -141,7 +138,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 animacionFrente.animar(Juego.BATCH, jugador.getX(), jugador.getY());
             }
         }
+        if (!jugador.isBalaMejoradaActiva()) {
             jugador.getBala().draw(Juego.BATCH);
+        }
     }
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : aliados.entrySet()){
@@ -280,21 +279,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
             chispa.animar(Juego.BATCH, jugador.getBala().getX()-9, jugador.getBala().getY()-45);
         }
-    }
-    public void socketEnemigos() {
-        socket.on("enemigos", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                JSONArray objetos = (JSONArray) objects[0];
-                int i = 0;
-                for (int y = 0; y < enemigosAlto; y++) {
-                    for (int x = 0; x < enemigosAncho; x++) {
-                        enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
-                        i++;
-                    }
-                }
-            }
-        });
     }
     @Override
     public void resize(int width, int height) {

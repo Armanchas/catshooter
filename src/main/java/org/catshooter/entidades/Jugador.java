@@ -4,10 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import org.catshooter.animacion.AnimacionDerecha;
-import org.catshooter.animacion.AnimacionFrente;
-import org.catshooter.animacion.AnimacionIzquierda;
-import org.catshooter.core.Juego;
 
 public class Jugador extends Entidad {
     private int speedBala;
@@ -72,11 +68,9 @@ public class Jugador extends Entidad {
     public void balaMejorada() {
         if (balaMejoradaActiva) {
             speedBala = 14;
-            bala.setScale(0);
         }
         else {
             speedBala = 8;
-            bala.setScale(1f);
         }
     }
     public void restarTimer(float dt) {
