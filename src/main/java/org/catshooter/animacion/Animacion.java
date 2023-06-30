@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Animacion implements Animable{
+public abstract class Animacion implements Animable{
     protected static final int FRAME_COLS = 4, FRAME_ROWS = 2;
     protected Animation<TextureRegion> animacionGato;
     protected Texture gatoSheet;

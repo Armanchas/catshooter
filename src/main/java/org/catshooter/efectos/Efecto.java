@@ -8,7 +8,6 @@ import org.catshooter.animacion.Animable;
 
 public abstract class Efecto implements Animable {
     protected Texture imagen;
-    protected TextureRegion[] regiones;
     protected Animation<TextureRegion> animacion;
     protected float frameActual;
     public Efecto() {
