@@ -35,7 +35,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private AnimacionIzquierda animacionIzquierda;
     public PantallaJuego(Juego juego) {
         super(juego);
-        fondo = new Texture("juego/fondo2.png");
+        fondo = new Texture("juego/fondo3.gif");
 
         vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
         velocidadTextura = new Texture("power-ups/velocidad.png");
