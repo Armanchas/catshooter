@@ -1,7 +1,10 @@
 package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,6 +21,7 @@ import org.lwjgl.opengl.GL20;
 import java.util.HashMap;
 
 public class PantallaJuego extends PantallaJuegoAbstracta {
+    private final Texture fondo;
     private final Explosion[] explosiones;
     private final PowerUp[] powerUps;
     private PowerUp powerUpEnPantalla;
@@ -32,6 +36,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private AnimacionIzquierda animacionIzquierda;
     public PantallaJuego(Juego juego) {
         super(juego);
+        fondo = new Texture("juego/fondo2.png");
+
         vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
         velocidadTextura = new Texture("power-ups/velocidad.png");
         balaMejoradaTextura = new Texture("power-ups/balaMejorada.png");
@@ -55,7 +61,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     @Override
     public void show() {
-
     }
     @Override
     public void render(float delta) {
@@ -64,17 +69,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         actualizarServidor();
 
-        if(jugador != null && enemigos[0] != null
-                && enemigos[1] != null
-                && enemigos[2] != null
-                && enemigos[3] != null
-                && enemigos[4] != null
-                && enemigos[5] != null
-                && enemigos[6] != null
-                && enemigos[7] != null
-        ) {
-
-            actualizarHud();
+        if(jugador != null) {
 
             restarPowerUpCooldown(delta);
 
@@ -89,6 +84,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             actualizarPowerUps(delta, jugador);
 
             Juego.BATCH.begin();
+
+            Juego.BATCH.draw(fondo,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
             matarEntidad(Juego.BATCH);
 
@@ -108,6 +105,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             respawnearEnemigos();
 
             Juego.BATCH.end();
+
+            actualizarHud();
         }
     }
     public void actualizarHud () {
