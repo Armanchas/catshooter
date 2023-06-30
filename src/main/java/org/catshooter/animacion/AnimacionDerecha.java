@@ -5,12 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class AnimacionDerecha {
-    private static final int FRAME_COLS = 4, FRAME_ROWS = 2;
-    private Animation<TextureRegion> animacionGato;
-    private Texture gatoSheet;
-    private TextureRegion[] gatoFrames;
-    private float stateTime;
+public class AnimacionDerecha extends Animacion{
     public AnimacionDerecha() {
         gatoSheet = new Texture("entidades/orange_2_right.png");
         establecerFrames();
@@ -28,12 +23,6 @@ public class AnimacionDerecha {
         }
     }
     public void animar(SpriteBatch batch, float x, float y) {
-        batch.draw(animacionGato.getKeyFrame(stateTime,true), x, y,46,39);
-    }
-    public float getStateTime() {
-        return stateTime;
-    }
-    public void setStateTime(float stateTime) {
-        this.stateTime = stateTime;
+        batch.draw(animacionGato.getKeyFrame(stateTime,true), x, y,66,59);
     }
 }

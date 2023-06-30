@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.catshooter.animacion.Animable;
 
-public abstract class Efecto {
+public abstract class Efecto implements Animable {
     protected Texture imagen;
     protected TextureRegion[] regiones;
     protected Animation<TextureRegion> animacion;
