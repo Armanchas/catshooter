@@ -312,4 +312,5 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
     }
+
 }

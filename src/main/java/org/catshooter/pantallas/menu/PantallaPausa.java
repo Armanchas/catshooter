@@ -32,7 +32,9 @@ public class PantallaPausa extends PantallaAbstracta{
             juego.setScreen(pantallaActual);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            pantallaActual.getSocket().close();
             juego.setScreen(new PantallaMenu(juego));
+
         }
     }
     public void configurarMusica() {

@@ -80,6 +80,10 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
     }
+    public Socket getSocket() {
+        return socket;
+    }
+
     public void conectarSocket() {
         try {
             socket = IO.socket("http://localhost:3000");
@@ -171,4 +175,5 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         });
     }
+
 }
