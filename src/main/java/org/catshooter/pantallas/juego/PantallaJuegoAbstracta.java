@@ -36,10 +36,10 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
         balaTextura = new Texture("entidades/bala.png");
+        enemigoBalaTextura = new Texture("entidades/bala.png");
         jugadorTextura = new Texture("entidades/nave.png");
         aliadoTextura = new Texture("entidades/nave.png");
-        enemigoTextura = new Texture("entidades/nave.png");
-        enemigoBalaTextura = new Texture("entidades/bala.png");
+        enemigoTextura = new Texture("entidades/ufo.png");
         aliados = new HashMap<>();
 
         hud = new Hud(Juego.BATCH);

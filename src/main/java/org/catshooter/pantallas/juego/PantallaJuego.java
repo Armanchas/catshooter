@@ -1,10 +1,8 @@
 package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +13,7 @@ import org.catshooter.efectos.Explosion;
 import org.catshooter.entidades.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.pantallas.menu.PantallaGameOver;
+import org.catshooter.pantallas.menu.PantallaPausa;
 import org.catshooter.powerups.*;
 import org.lwjgl.opengl.GL20;
 
@@ -40,7 +39,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
         velocidadTextura = new Texture("power-ups/velocidad.png");
-        balaMejoradaTextura = new Texture("power-ups/balaMejorada.png");
+        balaMejoradaTextura = new Texture("power-ups/mejoraBala.png");
 
         enemigos = new Enemigo[enemigosAlto * enemigosAncho];
         explosiones = new Explosion[enemigos.length];
@@ -70,6 +69,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         actualizarServidor();
 
         if(jugador != null) {
+
+            pausar();
 
             restarPowerUpCooldown(delta);
 
@@ -277,6 +278,11 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         if (jugador.isBalaMejoradaActiva()) {
             chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
             chispa.animar(Juego.BATCH, jugador.getBala().getX()-9, jugador.getBala().getY()-45);
+        }
+    }
+    public void pausar() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            juego.setScreen(new PantallaPausa(juego));
         }
     }
     @Override

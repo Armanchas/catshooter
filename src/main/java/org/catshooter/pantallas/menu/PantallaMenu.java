@@ -11,6 +11,21 @@ public class PantallaMenu extends PantallaAbstracta {
         super(juego);
 
         menu = new Menu(stage,"JUGAR","NIVELES","OPCIONES","SALIR");
+        configurarMusica();
+    }
+    private void acciones() {
+        if (menu.SePresionoBoton1())
+            juego.setScreen(new PantallaJuego(juego));
+        if (menu.SePresionoBoton3())
+            juego.setScreen(new PantallaOpciones(juego));
+        if (menu.SePresionoBoton4())
+            Gdx.app.exit();
+    }
+    public void configurarMusica() {
+        gestorDeAudio.cargarMusica("audio/menu/menu.wav","menu");
+        gestorDeAudio.getMusica("menu").setVolume(0.1f);
+        gestorDeAudio.getMusica("menu").setLooping(true);
+        gestorDeAudio.getMusica("menu").play();
     }
     @Override
     public void show() {
@@ -43,17 +58,11 @@ public class PantallaMenu extends PantallaAbstracta {
 
     @Override
     public void hide() {
-
+        gestorDeAudio.getMusica("menu").stop();
     }
 
     @Override
     public void dispose() {
-
-    }
-    private void acciones() {
-        if (menu.SePresionoBoton1())
-            juego.setScreen(new PantallaJuego(juego));
-        if (menu.SePresionoBoton4())
-            Gdx.app.exit();
+        gestorDeAudio.getMusica("menu").dispose();
     }
 }

@@ -3,7 +3,6 @@ package org.catshooter.entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemigo extends Entidad{
@@ -20,7 +19,7 @@ public class Enemigo extends Entidad{
         speed = 1;
         bala.setPosition(0,-20);
         bala.setScale(1f);
-        setPosition(posicion.x+200, posicion.y+400);
+        setPosition(posicion.x+200, posicion.y+360);
     }
     @Override
     public void definirMovimiento(float dt) {

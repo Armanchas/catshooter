@@ -15,6 +15,13 @@ public class PantallaGameOver extends PantallaAbstracta {
         super(juego);
         pantallaActual = (PantallaJuegoAbstracta) juego.getScreen();
 
+        configurarMusica();
+    }
+    @Override
+    public void configurarMusica() {
+        gestorDeAudio.cargarMusica("audio/menu/gameover.wav","gameover");
+        gestorDeAudio.getMusica("gameover").setVolume(0.12f);
+        gestorDeAudio.getMusica("gameover").play();
     }
     @Override
     public void show() {
@@ -22,7 +29,6 @@ public class PantallaGameOver extends PantallaAbstracta {
     }
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -60,6 +66,7 @@ public class PantallaGameOver extends PantallaAbstracta {
     @Override
     public void dispose() {
         imagen.dispose();
+        gestorDeAudio.getMusica("gameover").dispose();
     }
 }
 
