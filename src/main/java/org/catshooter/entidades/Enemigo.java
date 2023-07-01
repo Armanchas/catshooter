@@ -10,6 +10,7 @@ public class Enemigo extends Entidad{
     private int speed;
     private boolean estaVivo;
     private float timer;
+    private float aumentoVelBala;
     public Enemigo(Vector2 posicion, Texture imagen, Texture imagenBala) {
         super(imagen,imagenBala);
         this.posicion = posicion;
@@ -28,7 +29,7 @@ public class Enemigo extends Entidad{
     }
     @Override
     public void disparar() {
-        bala.translate(0, -4);
+        bala.translate(0, -3.6f-aumentoVelBala);
 
         if (bala.getY() < -400) {
                 bala.setPosition(getX(), getY());
@@ -52,6 +53,9 @@ public class Enemigo extends Entidad{
     }
     public boolean balaEstaFueraDePantalla() {
         return bala.getY() < -20;
+    }
+    public void setAumentoVelBala(float aumentoVelBala) {
+        this.aumentoVelBala = aumentoVelBala;
     }
     public void setSpeed(int speed) {
         this.speed = speed;

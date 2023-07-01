@@ -60,9 +60,8 @@ public class PantallaGameOver extends PantallaAbstracta {
 
     @Override
     public void hide() {
-
+        gestorDeAudio.getMusica("gameover").stop();
     }
-
     @Override
     public void dispose() {
         imagen.dispose();

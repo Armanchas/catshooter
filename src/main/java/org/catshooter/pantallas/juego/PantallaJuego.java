@@ -33,6 +33,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final AnimacionIzquierda animacionIzquierda;
     private float powerUpsCooldown;
     private float enemigosCooldown;
+    private float aumento;
     public PantallaJuego(Juego juego) {
         super(juego);
         fondo = new Texture("juego/fondo3.gif");
@@ -157,10 +158,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     public void generarEnemigos() {
         reproducirSonidoEnemigos();
+        aumento+=0.4f;
         int i = 0;
         for (int y = 0; y < enemigosAlto; y++) {
             for (int x = 0; x < enemigosAncho; x++) {
                 enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+                enemigos[i].setAumentoVelBala(aumento);
                 i++;
             }
         }
