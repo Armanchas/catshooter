@@ -23,7 +23,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Texture jugadorTextura;
     protected Texture aliadoTextura;
     protected Texture balaTextura;
-    protected Texture enemigoTextura;
+    protected Texture enemigoTextura, enemigoTextura2, enemigoTextura3;
     protected Texture enemigoBalaTextura;
     protected Enemigo[] enemigos;
     protected int enemigosAncho = 4;
@@ -34,13 +34,9 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Hud hud;
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
-        balaTextura = new Texture("entidades/bala.png");
-        enemigoBalaTextura = new Texture("entidades/bala.png");
-        jugadorTextura = new Texture("entidades/nave.png");
-        aliadoTextura = new Texture("entidades/nave.png");
-        enemigoTextura = new Texture("entidades/ufo.png");
         aliados = new HashMap<>();
 
+        cargarTexturas();
         hud = new Hud(Juego.BATCH);
 
         gestorDeAudio = new GestorDeAudio();
@@ -48,6 +44,15 @@ public abstract class PantallaJuegoAbstracta implements Screen {
 
         conectarSocket();
         configurarEventos();
+    }
+    public void cargarTexturas() {
+        balaTextura = new Texture("entidades/bala.png");
+        enemigoBalaTextura = new Texture("entidades/bala.png");
+        jugadorTextura = new Texture("entidades/nave.png");
+        aliadoTextura = new Texture("entidades/nave.png");
+        enemigoTextura = new Texture("entidades/ufo.png");
+        enemigoTextura2 = new Texture("entidades/alien.png");
+        enemigoTextura3 = new Texture("entidades/ufo2.png");
     }
     public void cargarSonidos() {
         gestorDeAudio.cargarSonido("audio/efecto/nuevosEnemigos.wav","enemigos");
@@ -65,12 +70,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     public void reproducirSonidoRecibirDaño() {
         long id = gestorDeAudio.getSonido("recibirDaño").play();
         gestorDeAudio.getSonido("recibirDaño").setVolume(id,0.09f);
-    }
-    @Override
-    public void dispose() {
-        jugadorTextura.dispose();
-        balaTextura.dispose();
-        aliadoTextura.dispose();
     }
     public void cambiarPantalla(Screen pantalla) {
         PantallaJuego pantallaAnterior = (PantallaJuego) juego.getScreen();
@@ -173,5 +172,4 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         });
     }
-
 }

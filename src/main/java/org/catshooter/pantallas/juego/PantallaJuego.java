@@ -162,11 +162,20 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         int i = 0;
         for (int y = 0; y < enemigosAlto; y++) {
             for (int x = 0; x < enemigosAncho; x++) {
-                enemigos[i] = new Enemigo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+                enemigos[i] = new Enemigo(new Vector2(x*120,y*120), randomizarEnemigos(), enemigoBalaTextura);
                 enemigos[i].setAumentoVelBala(aumento);
                 i++;
             }
         }
+    }
+    public Texture randomizarEnemigos() {
+        int random = generarRandom();
+        return switch (random) {
+            case 0 -> enemigoTextura;
+            case 1 -> enemigoTextura2;
+            case 2 -> enemigoTextura3;
+            default -> null;
+        };
     }
     public void dibujarEnemigos() {
         for (Enemigo enemigo : enemigos) {
@@ -318,5 +327,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         vidaExtraTextura.dispose();
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
+        jugadorTextura.dispose();
+        balaTextura.dispose();
+        aliadoTextura.dispose();
+        enemigoTextura2.dispose();
+        enemigoTextura3.dispose();
     }
 }
