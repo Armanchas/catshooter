@@ -27,12 +27,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture vidaExtraTextura;
     private final Texture balaMejoradaTextura;
     private final Texture velocidadTextura;
-    private float powerUpsCooldown;
-    private float enemigosCooldown;
     private final Chispa chispa;
     private final AnimacionFrente animacionFrente;
     private final AnimacionDerecha animacionDerecha;
     private final AnimacionIzquierda animacionIzquierda;
+    private float powerUpsCooldown;
+    private float enemigosCooldown;
     public PantallaJuego(Juego juego) {
         super(juego);
         fondo = new Texture("juego/fondo3.gif");
@@ -316,5 +316,4 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         velocidadTextura.dispose();
         balaMejoradaTextura.dispose();
     }
-
 }

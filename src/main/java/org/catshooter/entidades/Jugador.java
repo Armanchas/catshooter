@@ -69,7 +69,7 @@ public class Jugador extends Entidad {
             } else {
                 reproducirSonidoSuperDisparo();
             }
-            bala.setPosition(getX()+24,getY()+16);
+            bala.setPosition(getX()+8,getY()+16);
         }
     }
     @Override
