@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import org.catshooter.controladores.GestorDeAudio;
 import org.catshooter.hud.Hud;
 import org.catshooter.core.Juego;
@@ -47,7 +46,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         gestorDeAudio = new GestorDeAudio();
 
         conectarSocket();
-        eventos();
+        configurarEventos();
     }
     @Override
     public void dispose() {
@@ -64,9 +63,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         }
     }
     public void actualizarServidor() {
-        //Se almacenan las coordenadas del jugador y su disparo en una objeto JSON,
-        //luego se envian los datos al servidor emitiendo el evento "actualizarPosiciones".
-
         if (jugador!= null) {
             JSONObject data = new JSONObject();
             try {
@@ -92,86 +88,66 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             throw new RuntimeException(e);
         }
     }
-    public void eventos() {
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                jugador = new Jugador(jugadorTextura, balaTextura);
+    public void configurarEventos() {
+        socket.on(Socket.EVENT_CONNECT, objects -> jugador = new Jugador(jugadorTextura, balaTextura));
+
+        socket.on("socketID", objects -> {
+            JSONObject data = (JSONObject) objects[0];
+            try {
+                String id = data.getString("id");
+                System.out.println("Mi ID: " + id);
+            } catch (JSONException e) {
+                System.out.println("Error");
             }
         });
-        socket.on("socketID", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                JSONObject data = (JSONObject) objects[0];
-                try {
-                    String id = data.getString("id");
-                    System.out.println("Mi ID: " + id);
-                } catch (JSONException e) {
-                    System.out.println("Error");
-                }
+        socket.on("nuevoJugador", objects -> {
+            JSONObject data = (JSONObject) objects[0];
+            try {
+                String id = data.getString("id");
+                System.out.println("Nuevo Jugador ID: " + id);
+                aliados.put(id, new Jugador(aliadoTextura, balaTextura));
+            } catch (JSONException e) {
+                System.out.println("Error");
             }
         });
-        socket.on("nuevoJugador", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                JSONObject data = (JSONObject) objects[0];
-                try {
-                    String id = data.getString("id");
-                    System.out.println("Nuevo Jugador ID: " + id);
-                    aliados.put(id, new Jugador(aliadoTextura, balaTextura));
-                } catch (JSONException e) {
-                    System.out.println("Error");
-                }
+        socket.on("jugadorDesconectado", objects -> {
+            JSONObject data = (JSONObject) objects[0];
+            try {
+                String id = data.getString("id");
+                aliados.remove(id);
+            } catch (JSONException e) {
+                System.out.println("Error");
             }
         });
-        socket.on("jugadorDesconectado", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                JSONObject data = (JSONObject) objects[0];
-                try {
-                    String id = data.getString("id");
-                    aliados.remove(id);
-                } catch (JSONException e) {
-                    System.out.println("Error");
+        socket.on("actualizarPosiciones", objects -> {
+            JSONObject data = (JSONObject) objects[0];
+            try {
+                String id = data.getString("id");
+                double x = data.getDouble("x");
+                double y = data.getDouble("y");
+                double xBala = data.getDouble("xBala");
+                double yBala = data.getDouble("yBala");
+                if (aliados.get(id) != null) {
+                    aliados.get(id).setPosition((float) x, (float) y);
+                    aliados.get(id).getBala().setPosition((float) xBala, (float) yBala);
                 }
+            } catch (JSONException e) {
+                System.out.println("Error");
             }
         });
-        socket.on("actualizarPosiciones", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                //se extraen las posiciones almacenadas en el objeto JSON para actualizarlas
-                JSONObject data = (JSONObject) objects[0];
-                try {
-                    String id = data.getString("id");
-                    double x = data.getDouble("x");
-                    double y = data.getDouble("y");
-                    double xBala = data.getDouble("xBala");
-                    double yBala = data.getDouble("yBala");
-                    if (aliados.get(id) != null) {
-                        aliados.get(id).setPosition((float) x, (float) y);
-                        aliados.get(id).getBala().setPosition((float) xBala, (float) yBala);
-                    }
-                } catch (JSONException e) {
-                    System.out.println("Error");
+        socket.on("obtenerJugadores", objects -> {
+            JSONArray objetos = (JSONArray) objects[0];
+            try {
+                for (int i = 0; i < objetos.length(); i++) {
+                    Jugador aliado = new Jugador(aliadoTextura, balaTextura);
+                    Vector2 posicion = new Vector2();
+                    posicion.x =  ((Double) objetos.getJSONObject(i).getDouble("x")).floatValue();
+                    posicion.y =  ((Double) objetos.getJSONObject(i).getDouble("y")).floatValue();
+                    aliado.setPosition(posicion.x, posicion.y);
+                    aliados.put(objetos.getJSONObject(i).getString("id"),aliado);
                 }
-            }
-        });
-        socket.on("obtenerJugadores", new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                JSONArray objetos = (JSONArray) objects[0];
-                try {
-                    for (int i = 0; i < objetos.length(); i++) {
-                        Jugador aliado = new Jugador(aliadoTextura, balaTextura);
-                        Vector2 posicion = new Vector2();
-                        posicion.x =  ((Double) objetos.getJSONObject(i).getDouble("x")).floatValue();
-                        posicion.y =  ((Double) objetos.getJSONObject(i).getDouble("y")).floatValue();
-                        aliado.setPosition(posicion.x, posicion.y);
-                        aliados.put(objetos.getJSONObject(i).getString("id"),aliado);
-                    }
-                } catch (JSONException e) {
-                    System.out.println("Error");
-                }
+            } catch (JSONException e) {
+                System.out.println("Error");
             }
         });
     }

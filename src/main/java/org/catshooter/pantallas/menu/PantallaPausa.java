@@ -8,8 +8,8 @@ import org.catshooter.pantallas.juego.PantallaJuego;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaPausa extends PantallaAbstracta{
-    private Texture fondo;
-    private PantallaJuego pantallaActual;
+    private final Texture fondo;
+    private final PantallaJuego pantallaActual;
     public PantallaPausa(Juego juego) {
         super(juego);
         fondo = new Texture("menu/gameover.png");
@@ -22,12 +22,13 @@ public class PantallaPausa extends PantallaAbstracta{
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        establecerAcciones();
+        gestionarTeclas();
+
         batch.begin();
         batch.draw(fondo, 0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.end();
     }
-    public void establecerAcciones() {
+    public void gestionarTeclas() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             juego.setScreen(pantallaActual);
         }

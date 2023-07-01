@@ -29,10 +29,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private final Texture velocidadTextura;
     private float powerUpsCooldown;
     private float enemigosCooldown;
-    private Chispa chispa;
-    private AnimacionFrente animacionFrente;
-    private AnimacionDerecha animacionDerecha;
-    private AnimacionIzquierda animacionIzquierda;
+    private final Chispa chispa;
+    private final AnimacionFrente animacionFrente;
+    private final AnimacionDerecha animacionDerecha;
+    private final AnimacionIzquierda animacionIzquierda;
     public PantallaJuego(Juego juego) {
         super(juego);
         fondo = new Texture("juego/fondo3.gif");
@@ -90,9 +90,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             matarEntidad(Juego.BATCH);
 
-            int random = (int) (Math.random() * 3);
-
-            generarPowerUps(random);
+            generarPowerUps(generarRandom());
 
             if (powerUpEnPantalla != null) {
                 powerUpEnPantalla.draw(Juego.BATCH);
@@ -130,12 +128,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         if (jugador.isEstaVivo()) {
             if (jugador.getDireccion() == 1){
-                animacionIzquierda.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+                animacionIzquierda.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
             }
             else if (jugador.getDireccion() == 2){
-                animacionDerecha.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+                animacionDerecha.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
             }else {
-                animacionFrente.animar(Juego.BATCH, jugador.getX(), jugador.getY());
+                animacionFrente.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
             }
         }
         if (!jugador.isBalaMejoradaActiva()) {
@@ -146,12 +144,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         for(HashMap.Entry<String, Jugador> entry : aliados.entrySet()){
             if (entry.getValue().isEstaVivo()) {
                 if (entry.getValue().getDireccion() == 1){
-                    animacionIzquierda.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                    animacionIzquierda.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
                 }
                 else if (entry.getValue().getDireccion() == 2){
-                    animacionDerecha.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                    animacionDerecha.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
                 }else {
-                    animacionFrente.animar(Juego.BATCH, entry.getValue().getX(), entry.getValue().getY());
+                    animacionFrente.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
                 }
             }
             entry.getValue().getBala().draw(Juego.BATCH);
@@ -260,8 +258,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
     }
     public void actualizarPowerUps(float dt, Jugador jugador) {
-        for (int i = 0; i < powerUps.length; i++) {
-            powerUps[i].aplicarHabilidad(dt,jugador);
+        for (PowerUp powerUp : powerUps) {
+            powerUp.aplicarHabilidad(dt, jugador);
         }
     }
     public void restarPowerUpCooldown(float dt) {
@@ -277,13 +275,16 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     public void animarChispa() {
         if (jugador.isBalaMejoradaActiva()) {
             chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
-            chispa.animar(Juego.BATCH, jugador.getBala().getX()-9, jugador.getBala().getY()-45);
+            chispa.animar(Juego.BATCH, jugador.getBala().getX()-14, jugador.getBala().getY()-45);
         }
     }
     public void pausar() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             juego.setScreen(new PantallaPausa(juego));
         }
+    }
+    public int generarRandom() {
+        return (int) (Math.random() * 3);
     }
     @Override
     public void resize(int width, int height) {

@@ -6,20 +6,25 @@ import org.catshooter.pantallas.juego.PantallaJuego;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaMenu extends PantallaAbstracta {
-    private Menu menu;
+    private final Menu menu;
     public PantallaMenu(Juego juego) {
         super(juego);
 
-        menu = new Menu(stage,"JUGAR","NIVELES","OPCIONES","SALIR");
+        menu = new Menu(stage,"JUGAR","CONTROLES","SALIR");
         configurarMusica();
     }
-    private void acciones() {
-        if (menu.SePresionoBoton1())
+    public void gestionarTeclas() {
+        if (menu.SePresionoBoton1()) {
+            gestorDeAudio.getMusica("menu").stop();
             juego.setScreen(new PantallaJuego(juego));
-        if (menu.SePresionoBoton3())
-            juego.setScreen(new PantallaOpciones(juego));
-        if (menu.SePresionoBoton4())
+        }
+        if (menu.SePresionoBoton2()) {
+            juego.setScreen(new PantallaControles(juego,this));
+            menu.setSePresionoBoton2(false);
+        }
+        if (menu.SePresionoBoton3()) {
             Gdx.app.exit();
+        }
     }
     public void configurarMusica() {
         gestorDeAudio.cargarMusica("audio/menu/menu.wav","menu");
@@ -36,7 +41,7 @@ public class PantallaMenu extends PantallaAbstracta {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        acciones();
+        gestionarTeclas();
 
         stage.act();
         stage.draw();
@@ -58,7 +63,7 @@ public class PantallaMenu extends PantallaAbstracta {
 
     @Override
     public void hide() {
-        gestorDeAudio.getMusica("menu").stop();
+
     }
 
     @Override

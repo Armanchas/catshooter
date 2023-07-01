@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimacionDerecha extends Animacion{
     public AnimacionDerecha() {
-        gatoSheet = new Texture("entidades/orange_2_right.png");
+        gatoSheet = new Texture("entidades/jugador/orange_2_right.png");
         establecerFrames();
         animacionGato = new Animation<TextureRegion>(0.025f, gatoFrames);
         stateTime = 0f;

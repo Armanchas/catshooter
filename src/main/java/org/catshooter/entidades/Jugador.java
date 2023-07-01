@@ -47,7 +47,7 @@ public class Jugador extends Entidad {
         bala.translate(0,speedBala);
 
         if (Gdx.input.isKeyPressed(Input.Keys.Z) && bala.getY()>=Gdx.graphics.getHeight()) {
-            bala.setPosition(getX()+16,getY()+16);
+            bala.setPosition(getX()+24,getY()+16);
         }
     }
     @Override

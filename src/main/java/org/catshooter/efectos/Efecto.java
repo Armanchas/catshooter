@@ -14,7 +14,9 @@ public abstract class Efecto implements Animable {
 
     }
     public abstract void establecerFrames();
-    public abstract void animar(SpriteBatch batch, float x, float y);
+    public void animar(SpriteBatch batch, float x, float y) {
+
+    }
     public boolean efectoFinalizo() {
         if (frameActual > animacion.getAnimationDuration()) {
             return true;

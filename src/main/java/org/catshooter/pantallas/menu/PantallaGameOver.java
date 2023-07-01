@@ -9,7 +9,7 @@ import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaGameOver extends PantallaAbstracta {
-    private final Texture imagen = new Texture("menu/gameover.png");;
+    private final Texture imagen = new Texture("menu/gameover.png");
     private final PantallaJuegoAbstracta pantallaActual;
     public PantallaGameOver(Juego juego) {
         super(juego);
@@ -32,13 +32,13 @@ public class PantallaGameOver extends PantallaAbstracta {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        reintentar();
+        gestionarTeclas();
         batch.begin();
         batch.draw(imagen, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
     }
 
-    public void reintentar() {
+    public void gestionarTeclas() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (pantallaActual instanceof PantallaJuego) {
                 juego.setScreen(new PantallaJuego(juego));
