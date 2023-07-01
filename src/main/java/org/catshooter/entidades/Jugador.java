@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import org.catshooter.controladores.GestorDeAudio;
 
 public class Jugador extends Entidad {
     private int speedBala;
@@ -12,6 +13,7 @@ public class Jugador extends Entidad {
     private boolean esInvencible;
     private float timer;
     private boolean balaMejoradaActiva;
+    private final GestorDeAudio gestorDeAudio;
     public Jugador(Texture imagen, Texture imgBala) {
         super(imagen,imgBala);
         setScale(1.2f);
@@ -25,7 +27,22 @@ public class Jugador extends Entidad {
         this.speedBala = 8;
         bala.setPosition(-20,4000);
 
+        gestorDeAudio = new GestorDeAudio();
+        cargarSonidos();
+
         timer = 0;
+    }
+    public void cargarSonidos() {
+        gestorDeAudio.cargarSonido("audio/efecto/disparo.wav","disparo");
+        gestorDeAudio.cargarSonido("audio/efecto/superDisparo.wav","superDisparo");
+    }
+    public void reproducirSonidoDisparo() {
+        long id = gestorDeAudio.getSonido("disparo").play();
+        gestorDeAudio.getSonido("disparo").setVolume(id,0.07f);
+    }
+    public void reproducirSonidoSuperDisparo() {
+        long id = gestorDeAudio.getSonido("superDisparo").play();
+        gestorDeAudio.getSonido("superDisparo").setVolume(id,0.07f);
     }
     @Override
     public void definirMovimiento(float dt) {
@@ -47,6 +64,11 @@ public class Jugador extends Entidad {
         bala.translate(0,speedBala);
 
         if (Gdx.input.isKeyPressed(Input.Keys.Z) && bala.getY()>=Gdx.graphics.getHeight()) {
+            if (!balaMejoradaActiva) {
+                reproducirSonidoDisparo();
+            } else {
+                reproducirSonidoSuperDisparo();
+            }
             bala.setPosition(getX()+24,getY()+16);
         }
     }

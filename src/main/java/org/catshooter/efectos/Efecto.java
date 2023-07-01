@@ -18,11 +18,7 @@ public abstract class Efecto implements Animable {
 
     }
     public boolean efectoFinalizo() {
-        if (frameActual > animacion.getAnimationDuration()) {
-            return true;
-        } else {
-            return false;
-        }
+        return frameActual > animacion.getAnimationDuration();
     }
     public void setFrameActual(float frameActual) {
         this.frameActual = frameActual;

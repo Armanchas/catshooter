@@ -44,9 +44,27 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         hud = new Hud(Juego.BATCH);
 
         gestorDeAudio = new GestorDeAudio();
+        cargarSonidos();
 
         conectarSocket();
         configurarEventos();
+    }
+    public void cargarSonidos() {
+        gestorDeAudio.cargarSonido("audio/efecto/nuevosEnemigos.wav","enemigos");
+        gestorDeAudio.cargarSonido("audio/efecto/explosion.wav","explosion");
+        gestorDeAudio.cargarSonido("audio/efecto/recibirDaño.wav","recibirDaño");
+    }
+    public void reproducirSonidoEnemigos() {
+        long id = gestorDeAudio.getSonido("enemigos").play();
+        gestorDeAudio.getSonido("enemigos").setVolume(id,0.07f);
+    }
+    public void reproducirSonidoExplosion() {
+        long id = gestorDeAudio.getSonido("explosion").play();
+        gestorDeAudio.getSonido("explosion").setVolume(id,0.07f);
+    }
+    public void reproducirSonidoRecibirDaño() {
+        long id = gestorDeAudio.getSonido("recibirDaño").play();
+        gestorDeAudio.getSonido("recibirDaño").setVolume(id,0.09f);
     }
     @Override
     public void dispose() {

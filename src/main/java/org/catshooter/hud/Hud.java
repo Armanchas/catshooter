@@ -14,8 +14,9 @@ import org.catshooter.entidades.Jugador;
 
 public class Hud {
     private final Stage stage;
-    private Viewport viewport;
-    private int puntos, vidas;
+    private final Viewport viewport;
+    private int puntos;
+    private final int vidas;
     private Label puntosLabel, contadorVidasLabel, vidasLabel, puntajeLabel;
 
     public Hud(SpriteBatch batch) {

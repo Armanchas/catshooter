@@ -41,10 +41,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         velocidadTextura = new Texture("power-ups/velocidad.png");
         balaMejoradaTextura = new Texture("power-ups/mejoraBala.png");
 
-        enemigos = new Enemigo[enemigosAlto * enemigosAncho];
-        explosiones = new Explosion[enemigos.length];
-        powerUps = new PowerUp[3];
-
         animacionFrente = new AnimacionFrente();
         animacionDerecha = new AnimacionDerecha();
         animacionIzquierda = new AnimacionIzquierda();
@@ -53,6 +49,10 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         enemigosCooldown = 0;
 
         chispa = new Chispa();
+
+        enemigos = new Enemigo[enemigosAlto * enemigosAncho];
+        powerUps = new PowerUp[3];
+        explosiones = new Explosion[enemigos.length];
 
         llenarEfectos();
         generarEnemigos();
@@ -156,6 +156,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void generarEnemigos() {
+        reproducirSonidoEnemigos();
         int i = 0;
         for (int y = 0; y < enemigosAlto; y++) {
             for (int x = 0; x < enemigosAncho; x++) {
@@ -182,6 +183,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         int i = 0;
         for (Enemigo enemigo : enemigos) {
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+                reproducirSonidoRecibirDaño();
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 jugador.setTimer(2f);
@@ -191,6 +193,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
                 }
             }
             if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
+                reproducirSonidoExplosion();
                 enemigo.setEstaVivo(false);
                 enemigo.setSpeed(0);
                 hud.añadirPuntaje();

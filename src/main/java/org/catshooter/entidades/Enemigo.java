@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemigo extends Entidad{
-    private Vector2 posicion;
+    private final Vector2 posicion;
     private int speed;
     private boolean estaVivo;
     private float timer;
@@ -51,11 +51,7 @@ public class Enemigo extends Entidad{
         }
     }
     public boolean balaEstaFueraDePantalla() {
-        if (bala.getY() < -20) {
-            return true;
-        } else {
-            return false;
-        }
+        return bala.getY() < -20;
     }
     public void setSpeed(int speed) {
         this.speed = speed;

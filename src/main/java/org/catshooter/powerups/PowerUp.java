@@ -24,7 +24,7 @@ public abstract class PowerUp extends Sprite implements Disposable {
         duracionHabilidad = 0;
     }
     public void cargarSonido() {
-        gestorDeAudio.cargarSonido("audio/tomarPowerUp.wav","powerUp");
+        gestorDeAudio.cargarSonido("audio/efecto/tomarPowerUp.wav","powerUp");
     }
     public void reproducirSonido() {
         long id = gestorDeAudio.getSonido("powerUp").play();

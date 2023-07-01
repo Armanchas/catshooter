@@ -9,7 +9,7 @@ public class AnimacionFrente extends Animacion{
     public AnimacionFrente() {
         gatoSheet = new Texture("entidades/jugador/orange_2_front.png");
         establecerFrames();
-        animacionGato = new Animation<TextureRegion>(0.025f, gatoFrames);
+        animacionGato = new Animation<>(0.025f, gatoFrames);
         stateTime = 0f;
     }
     public void establecerFrames() {
