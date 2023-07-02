@@ -12,7 +12,7 @@ public class PantallaPausa extends PantallaAbstracta{
     private final PantallaJuego pantallaActual;
     public PantallaPausa(Juego juego) {
         super(juego);
-        fondo = new Texture("menu/gameover.png");
+        fondo = new Texture("menu/pausa.png");
         pantallaActual = (PantallaJuego) juego.getScreen();
 
         configurarMusica();
