@@ -2,13 +2,16 @@ package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.animacion.*;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
+import org.catshooter.efectos.Efecto;
 import org.catshooter.efectos.Explosion;
 import org.catshooter.entidades.enemigos.Alien;
 import org.catshooter.entidades.enemigos.Enemigo;
@@ -37,6 +40,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     private float powerUpsCooldown;
     private float enemigosCooldown;
     private float aumento;
+    private ShapeRenderer shapeRenderer;
     public PantallaJuego(Juego juego) {
         super(juego);
         fondo = new Texture("juego/fondo3.gif");
@@ -48,6 +52,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         animacionFrente = new AnimacionFrente();
         animacionDerecha = new AnimacionDerecha();
         animacionIzquierda = new AnimacionIzquierda();
+        shapeRenderer = new ShapeRenderer();
 
         powerUpsCooldown = 1;
         enemigosCooldown = 0;
@@ -110,7 +115,18 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             Juego.BATCH.end();
 
             actualizarHud();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            dibujarHitbox();
+            shapeRenderer.end();
         }
+    }
+    public void dibujarHitbox() {
+        Rectangle hitbox = jugador.getBoundingRectangle();
+
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+
+        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
     public void actualizarHud () {
         Juego.BATCH.setProjectionMatrix(hud.getStage().getCamera().combined);
@@ -132,12 +148,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
         if (jugador.isEstaVivo()) {
             if (jugador.getDireccion() == 1){
-                animacionIzquierda.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
+                animacionIzquierda.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
             }
             else if (jugador.getDireccion() == 2){
-                animacionDerecha.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
+                animacionDerecha.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
             }else {
-                animacionFrente.animar(Juego.BATCH, jugador.getX()-16, jugador.getY());
+                animacionFrente.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
             }
         }
         if (!jugador.isBalaMejoradaActiva()) {

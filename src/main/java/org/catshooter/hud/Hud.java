@@ -13,10 +13,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import org.catshooter.entidades.Jugador;
 
 public class Hud {
-    private final Stage stage;
-    private final Viewport viewport;
+    private Stage stage;
+    private Viewport viewport;
     private int puntos,oleadas;
-    private final int vidas;
+    private int vidas;
     private Label puntosLabel, contadorVidasLabel, vidasLabel, puntajeLabel,oleadasLabel,contadorOleadasLabel;
 
     public Hud(SpriteBatch batch) {
@@ -58,5 +58,9 @@ public class Hud {
     }
     public Stage getStage() {
         return stage;
+    }
+
+    public Hud(int puntos) {
+        this.puntos = puntos;
     }
 }
