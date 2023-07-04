@@ -16,7 +16,7 @@ public class Boss extends Enemigo {
 
         tiempoInvencibilidad = 0;
 
-        vidas = 5;
+        vidas = 10;
 
         balas = new Sprite[6];
         llenarBalas(imagenBala);
