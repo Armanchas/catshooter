@@ -10,6 +10,7 @@ import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.entidades.enemigos.Boss;
 import org.catshooter.pantallas.menu.PantallaGameOver;
+import org.catshooter.pantallas.menu.PantallaVictoria;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaBossFinal extends PantallaJuegoAbstracta {
@@ -30,7 +31,6 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         comprobarColisionBalaConJugador(hitboxJugador);
         comprobarColisionEnemigoConBala(hitboxBala);
     }
-
     public void comprobarColisionBalaConJugador(Rectangle hitboxJugador) {
         for (int i = 0; i < jefeFinal.getBalas().length; i++) {
             if (jefeFinal.getBalas()[i].getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
@@ -56,6 +56,8 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
             if (!jugador.isBalaMejoradaActiva()) {
                 jugador.getBala().setPosition(-2000, 2000);
             }
+
+            juego.setScreen(new PantallaVictoria(juego));
         }
     }
     @Override
