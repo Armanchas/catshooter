@@ -16,12 +16,12 @@ public class Menu extends Actor {
     private List<Button> botones;
     private final Skin skin;
     private final Table table;
-    private boolean sePresionoBoton1, sePresionoBoton2, sePresionoBoton3;
-    public Menu(Stage stage, String boton1, String boton2, String boton3) {
+    private boolean sePresionoBoton1, sePresionoBoton2, sePresionoBoton3,sePresionoBoton4;
+    public Menu(Stage stage, String boton1, String boton2, String boton3, String boton4) {
         skin = new Skin(Gdx.files.internal("menu/skin/vhs-ui.json"));
         table = new Table();
 
-        establecerBotones(boton1,boton2,boton3);
+        establecerBotones(boton1,boton2,boton3,boton4);
         agregarBotones();
         agregarListeners();
         centrarTable();
@@ -29,16 +29,18 @@ public class Menu extends Actor {
 
         Gdx.input.setInputProcessor(stage);
     }
-    public void establecerBotones(String nombreBoton1, String nombreBoton2, String nombreBoton3) {
+    public void establecerBotones(String nombreBoton1, String nombreBoton2, String nombreBoton3, String nombreBoton4) {
         botones = Arrays.asList(
                 new TextButton(nombreBoton1,skin),
                 new TextButton(nombreBoton2,skin),
-                new TextButton(nombreBoton3,skin));
+                new TextButton(nombreBoton3,skin),
+                new TextButton(nombreBoton4,skin));
     }
     public void agregarBotones() {
         table.add(botones.get(0)).width(200).height(70).space(2).row();
         table.add(botones.get(1)).width(200).height(70).space(2).row();
         table.add(botones.get(2)).width(200).height(70).space(2).row();
+        table.add(botones.get(3)).width(200).height(70).space(2).row();
     }
     public void agregarListeners() {
         botones.get(0).addListener((new ChangeListener() {
@@ -57,6 +59,12 @@ public class Menu extends Actor {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 setSePresionoBoton3(true);
+            }
+        }));
+        botones.get(3).addListener((new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                setSePresionoBoton4(true);
             }
         }));
     }
@@ -84,5 +92,12 @@ public class Menu extends Actor {
 
     public void setSePresionoBoton3(boolean sePresionoBoton3) {
         this.sePresionoBoton3 = sePresionoBoton3;
+    }
+    public boolean SePresionoBoton4() {
+        return sePresionoBoton4;
+    }
+
+    public void setSePresionoBoton4(boolean sePresionoBoton4) {
+        this.sePresionoBoton4 = sePresionoBoton4;
     }
 }

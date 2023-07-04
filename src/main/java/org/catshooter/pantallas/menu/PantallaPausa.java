@@ -4,16 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import org.catshooter.core.Juego;
-import org.catshooter.pantallas.juego.PantallaJuego;
+import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaPausa extends PantallaAbstracta{
     private final Texture fondo;
-    private final PantallaJuego pantallaActual;
+    private final PantallaJuegoAbstracta pantallaActual;
     public PantallaPausa(Juego juego) {
         super(juego);
         fondo = new Texture("menu/pausa.png");
-        pantallaActual = (PantallaJuego) juego.getScreen();
+        pantallaActual = (PantallaJuegoAbstracta) juego.getScreen();
 
         configurarMusica();
     }
@@ -33,7 +33,6 @@ public class PantallaPausa extends PantallaAbstracta{
             juego.setScreen(pantallaActual);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            pantallaActual.getSocket().close();
             juego.setScreen(new PantallaMenu(juego));
 
         }

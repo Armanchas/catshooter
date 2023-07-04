@@ -63,4 +63,8 @@ public class Hud {
     public Hud(int puntos) {
         this.puntos = puntos;
     }
+
+    public int getPuntos() {
+        return puntos;
+    }
 }

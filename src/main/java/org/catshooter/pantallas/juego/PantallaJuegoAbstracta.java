@@ -1,21 +1,33 @@
 package org.catshooter.pantallas.juego;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.socket.client.IO;
 import io.socket.client.Socket;
+import org.catshooter.animacion.AnimacionDerecha;
+import org.catshooter.animacion.AnimacionFrente;
+import org.catshooter.animacion.AnimacionIzquierda;
 import org.catshooter.controladores.GestorDeAudio;
+import org.catshooter.efectos.Chispa;
+import org.catshooter.efectos.Explosion;
+import org.catshooter.entidades.enemigos.Alien;
+import org.catshooter.entidades.enemigos.Ufo;
+import org.catshooter.entidades.enemigos.Ufo2;
 import org.catshooter.hud.Hud;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.enemigos.Enemigo;
 import org.catshooter.entidades.Jugador;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-import java.util.HashMap;
+import org.catshooter.pantallas.menu.PantallaPausa;
+import org.catshooter.powerups.BalaMejorada;
+import org.catshooter.powerups.PowerUp;
+import org.catshooter.powerups.Velocidad;
+import org.catshooter.powerups.VidaExtra;
 
 public abstract class PantallaJuegoAbstracta implements Screen {
     protected Juego juego;
@@ -28,22 +40,54 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Enemigo[] enemigos;
     protected int enemigosAncho = 4;
     protected int enemigosAlto = 2;
-    protected HashMap<String,Jugador> aliados;
-    protected Socket socket;
     protected GestorDeAudio gestorDeAudio;
     protected Hud hud;
+    protected Texture fondo;
+    protected Explosion[] explosiones;
+    protected PowerUp[] powerUps;
+    protected PowerUp powerUpEnPantalla;
+    protected Texture vidaExtraTextura;
+    protected Texture balaMejoradaTextura;
+    protected Texture velocidadTextura;
+    protected Chispa chispa;
+    protected AnimacionFrente animacionFrente;
+    protected AnimacionDerecha animacionDerecha;
+    protected AnimacionIzquierda animacionIzquierda;
+    protected float powerUpsCooldown;
+    protected float enemigosCooldown;
+    protected float aumento;
+    protected ShapeRenderer shapeRenderer;
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
-        aliados = new HashMap<>();
+        fondo = new Texture("juego/fondo3.gif");
 
-        cargarTexturas();
         hud = new Hud(Juego.BATCH);
 
         gestorDeAudio = new GestorDeAudio();
-        cargarSonidos();
 
-        conectarSocket();
-        configurarEventos();
+        vidaExtraTextura = new Texture("power-ups/vidaExtra.png");
+        velocidadTextura = new Texture("power-ups/velocidad.png");
+        balaMejoradaTextura = new Texture("power-ups/mejoraBala.png");
+
+        animacionFrente = new AnimacionFrente();
+        animacionDerecha = new AnimacionDerecha();
+        animacionIzquierda = new AnimacionIzquierda();
+        shapeRenderer = new ShapeRenderer();
+
+        powerUpsCooldown = 1;
+        enemigosCooldown = 0;
+
+        chispa = new Chispa();
+
+        enemigos = new Enemigo[enemigosAlto * enemigosAncho];
+        powerUps = new PowerUp[3];
+        explosiones = new Explosion[enemigos.length];
+
+        cargarSonidos();
+        cargarTexturas();
+        llenarEfectos();
+        generarEnemigos();
+        crearPowerUps();
     }
     public void cargarTexturas() {
         balaTextura = new Texture("entidades/bala.png");
@@ -71,105 +115,195 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         long id = gestorDeAudio.getSonido("recibirDaño").play();
         gestorDeAudio.getSonido("recibirDaño").setVolume(id,0.09f);
     }
-    public void cambiarPantalla(Screen pantalla) {
-        PantallaJuego pantallaAnterior = (PantallaJuego) juego.getScreen();
-        juego.setScreen(pantalla);
-        socket.close();
-        if (pantallaAnterior != null) {
-            pantallaAnterior.dispose();
+    public abstract void cambiarPantalla(Screen screen);
+    public void dibujarHitbox() {
+        Rectangle hitbox = jugador.getBoundingRectangle();
+
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+
+        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+    }
+    public void actualizarHud () {
+        Juego.BATCH.setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
+
+        hud.modificarVidas(jugador);
+    }
+    public void actualizarEntidades(float delta) {
+        jugador.update(delta);
+
+        for (Enemigo enemigo : enemigos) {
+            enemigo.update(delta);
         }
     }
-    public void actualizarServidor() {
-        if (jugador!= null) {
-            JSONObject data = new JSONObject();
-            try {
-                data.put("x",jugador.getX());
-                data.put("y",jugador.getY());
-                data.put("xBala",jugador.getBala().getX());
-                data.put("yBala",jugador.getBala().getY());
-                socket.emit("actualizarPosiciones",data);
-            } catch (JSONException e) {
-                System.out.println("Error!");
+    public void dibujarJugador() {
+        animacionFrente.setStateTime(animacionFrente.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionDerecha.setStateTime(animacionDerecha.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionIzquierda.setStateTime(animacionIzquierda.getStateTime() + Gdx.graphics.getDeltaTime());
+
+        if (jugador.isEstaVivo()) {
+            if (jugador.getDireccion() == 1){
+                animacionIzquierda.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
+            }
+            else if (jugador.getDireccion() == 2){
+                animacionDerecha.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
+            }else {
+                animacionFrente.animar(Juego.BATCH, jugador.getX()-16, jugador.getY()-10);
+            }
+        }
+        if (!jugador.isBalaMejoradaActiva()) {
+            jugador.getBala().draw(Juego.BATCH);
+        }
+    }
+    public void generarEnemigos() {
+        reproducirSonidoEnemigos();
+        aumento+=0.4f;
+        int i = 0;
+        for (int y = 0; y < enemigosAlto; y++) {
+            for (int x = 0; x < enemigosAncho; x++) {
+                enemigos[i] = randomizarEnemigos(x,y);
+                enemigos[i].setAumentoVelBala(aumento);
+                i++;
             }
         }
     }
-    public Socket getSocket() {
-        return socket;
+    public Enemigo randomizarEnemigos(int x, int y) {
+        int random = generarRandom();
+        return switch (random) {
+            case 0 -> new Alien(new Vector2(x*120,y*120), enemigoTextura2, enemigoBalaTextura);
+            case 1 -> new Ufo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+            case 2 -> new Ufo2(new Vector2(x*120,y*120), enemigoTextura3, enemigoBalaTextura);
+            default -> null;
+        };
     }
+    public void dibujarEnemigos() {
+        for (Enemigo enemigo : enemigos) {
+            enemigo.getBala().draw(Juego.BATCH);
+            if (enemigo.EstaVivo()) {
+                enemigo.draw(Juego.BATCH);
+            }
+            if (!enemigo.EstaVivo() && enemigo.balaEstaFueraDePantalla()) {
+                enemigo.getBala().setPosition(-2000,2000);
+            }
+        }
+    }
+    public void matarEntidad(SpriteBatch batch) {
+        Rectangle hitboxJugador = jugador.getBoundingRectangle();
+        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
 
+        int i = 0;
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+                reproducirSonidoRecibirDaño();
+                enemigo.getBala().setPosition(-2000, 2000);
+                jugador.restarVida();
+                jugador.setEsInvencible(true);
+                jugador.setTimer(2f);
+
+                if (jugador.getVidas() == 0) {
+                    jugador.setEstaVivo(false);
+                }
+            }
+            if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
+                reproducirSonidoExplosion();
+                enemigo.setEstaVivo(false);
+                enemigo.setSpeed(0);
+                hud.añadirPuntaje();
+
+                if (!jugador.isBalaMejoradaActiva()) {
+                    jugador.getBala().setPosition(-2000, 2000);
+                }
+            }
+            if (!enemigo.EstaVivo()) {
+                float x = enemigo.getX();
+                float y = enemigo.getY();
+
+                explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
+                explosiones[i].animar(batch,x,y);
+            }
+            i++;
+        }
+    }
+    public void respawnearEnemigos() {
+        if (enemigosMuertos() && enemigosCooldown <= 0) {
+            enemigosCooldown = 5;
+        }
+        if (enemigosMuertos() && enemigosCooldown <= 1) {
+            generarEnemigos();
+            llenarEfectos();
+            hud.añadirOleada();
+        }
+    }
+    public boolean enemigosMuertos() {
+        for (Enemigo enemigo : enemigos) {
+            if (enemigo.EstaVivo()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public void llenarEfectos() {
+        for (int i = 0; i < explosiones.length; i++) {
+            explosiones[i] = new Explosion();
+        }
+    }
+    public void crearPowerUps() {
+        powerUps[0] = new VidaExtra(vidaExtraTextura);
+        powerUps[1] = new Velocidad(velocidadTextura);
+        powerUps[2] = new BalaMejorada(balaMejoradaTextura);
+    }
+    public void generarPowerUps(int random) {
+        PowerUp powerUp = powerUps[random];
+
+        float x = (float)(Math.random()*680)+120;
+        float y = (float)(Math.random()*200)+100;
+
+        if (powerUp.EstaEnPantalla()) {
+            powerUpEnPantalla = powerUp;
+        }
+        if (powerUp.getCooldown() <= 0) {
+            powerUp.setEstaEnPantalla(false);
+            powerUp.setPosition(2000,2000);
+        }
+        if (powerUpsCooldown <= 0) {
+            powerUp.setPosition(x, y);
+            powerUp.setEstaEnPantalla(true);
+            powerUpsCooldown = 15;
+            powerUp.setCooldown(5);
+        }
+
+    }
+    public void actualizarPowerUps(float dt, Jugador jugador) {
+        for (PowerUp powerUp : powerUps) {
+            powerUp.aplicarHabilidad(dt, jugador);
+        }
+    }
+    public void restarPowerUpCooldown(float dt) {
+        if (powerUpsCooldown >= 0) {
+            powerUpsCooldown -= dt;
+        }
+    }
+    public void restarEnemigosCooldown(float dt) {
+        if (enemigosCooldown >= 0) {
+            enemigosCooldown -= dt;
+        }
+    }
+    public void animarChispa() {
+        if (jugador.isBalaMejoradaActiva()) {
+            chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
+            chispa.animar(Juego.BATCH, jugador.getBala().getX()-14, jugador.getBala().getY()-45);
+        }
+    }
+    public void pausar() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            juego.setScreen(new PantallaPausa(juego));
+        }
+    }
+    public int generarRandom() {
+        return (int) (Math.random() * 3);
+    }
     public Jugador getJugador() {
         return jugador;
-    }
-
-    public void conectarSocket() {
-        try {
-            socket = IO.socket("http://localhost:3000");
-            socket.connect();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void configurarEventos() {
-        socket.on(Socket.EVENT_CONNECT, objects -> jugador = new Jugador(jugadorTextura, balaTextura));
-
-        socket.on("socketID", objects -> {
-            JSONObject data = (JSONObject) objects[0];
-            try {
-                String id = data.getString("id");
-                System.out.println("Mi ID: " + id);
-            } catch (JSONException e) {
-                System.out.println("Error");
-            }
-        });
-        socket.on("nuevoJugador", objects -> {
-            JSONObject data = (JSONObject) objects[0];
-            try {
-                String id = data.getString("id");
-                System.out.println("Nuevo Jugador ID: " + id);
-                aliados.put(id, new Jugador(aliadoTextura, balaTextura));
-            } catch (JSONException e) {
-                System.out.println("Error");
-            }
-        });
-        socket.on("jugadorDesconectado", objects -> {
-            JSONObject data = (JSONObject) objects[0];
-            try {
-                String id = data.getString("id");
-                aliados.remove(id);
-            } catch (JSONException e) {
-                System.out.println("Error");
-            }
-        });
-        socket.on("actualizarPosiciones", objects -> {
-            JSONObject data = (JSONObject) objects[0];
-            try {
-                String id = data.getString("id");
-                double x = data.getDouble("x");
-                double y = data.getDouble("y");
-                double xBala = data.getDouble("xBala");
-                double yBala = data.getDouble("yBala");
-                if (aliados.get(id) != null) {
-                    aliados.get(id).setPosition((float) x, (float) y);
-                    aliados.get(id).getBala().setPosition((float) xBala, (float) yBala);
-                }
-            } catch (JSONException e) {
-                System.out.println("Error");
-            }
-        });
-        socket.on("obtenerJugadores", objects -> {
-            JSONArray objetos = (JSONArray) objects[0];
-            try {
-                for (int i = 0; i < objetos.length(); i++) {
-                    Jugador aliado = new Jugador(aliadoTextura, balaTextura);
-                    Vector2 posicion = new Vector2();
-                    posicion.x =  ((Double) objetos.getJSONObject(i).getDouble("x")).floatValue();
-                    posicion.y =  ((Double) objetos.getJSONObject(i).getDouble("y")).floatValue();
-                    aliado.setPosition(posicion.x, posicion.y);
-                    aliados.put(objetos.getJSONObject(i).getString("id"),aliado);
-                }
-            } catch (JSONException e) {
-                System.out.println("Error");
-            }
-        });
     }
 }

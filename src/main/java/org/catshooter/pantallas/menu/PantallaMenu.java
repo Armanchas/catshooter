@@ -3,6 +3,7 @@ package org.catshooter.pantallas.menu;
 import com.badlogic.gdx.Gdx;
 import org.catshooter.core.Juego;
 import org.catshooter.pantallas.juego.PantallaJuego;
+import org.catshooter.pantallas.juego.PantallaJuegoMultiplayer;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaMenu extends PantallaAbstracta {
@@ -10,7 +11,7 @@ public class PantallaMenu extends PantallaAbstracta {
     public PantallaMenu(Juego juego) {
         super(juego);
 
-        menu = new Menu(stage,"JUGAR","CONTROLES","SALIR");
+        menu = new Menu(stage,"JUGAR","MULTIPLAYER","CONTROLES","SALIR");
         configurarMusica();
     }
     public void gestionarTeclas() {
@@ -19,10 +20,14 @@ public class PantallaMenu extends PantallaAbstracta {
             juego.setScreen(new PantallaJuego(juego));
         }
         if (menu.SePresionoBoton2()) {
-            juego.setScreen(new PantallaControles(juego,this));
-            menu.setSePresionoBoton2(false);
+            gestorDeAudio.getMusica("menu").stop();
+            juego.setScreen(new PantallaJuegoMultiplayer(juego));
         }
         if (menu.SePresionoBoton3()) {
+            juego.setScreen(new PantallaControles(juego,this));
+            menu.setSePresionoBoton3(false);
+        }
+        if (menu.SePresionoBoton4()) {
             Gdx.app.exit();
         }
     }
