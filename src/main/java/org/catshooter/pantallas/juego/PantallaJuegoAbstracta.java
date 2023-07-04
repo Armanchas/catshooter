@@ -8,7 +8,7 @@ import io.socket.client.Socket;
 import org.catshooter.controladores.GestorDeAudio;
 import org.catshooter.hud.Hud;
 import org.catshooter.core.Juego;
-import org.catshooter.entidades.Enemigo;
+import org.catshooter.entidades.enemigos.Enemigo;
 import org.catshooter.entidades.Jugador;
 import org.json.JSONArray;
 import org.json.JSONException;

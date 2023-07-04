@@ -1,16 +1,17 @@
-package org.catshooter.entidades;
+package org.catshooter.entidades.enemigos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import org.catshooter.entidades.Entidad;
 
-public class Enemigo extends Entidad{
-    private final Vector2 posicion;
-    private int speed;
-    private boolean estaVivo;
-    private float timer;
-    private float aumentoVelBala;
+public abstract class Enemigo extends Entidad {
+    protected final Vector2 posicion;
+    protected int speed;
+    protected boolean estaVivo;
+    protected float timer;
+    protected float aumentoVelBala;
     public Enemigo(Vector2 posicion, Texture imagen, Texture imagenBala) {
         super(imagen,imagenBala);
         this.posicion = posicion;
@@ -24,8 +25,14 @@ public class Enemigo extends Entidad{
     }
     @Override
     public void definirMovimiento(float dt) {
-        mover();
-        rebotar();
+        translate(8*speed,0);
+
+        if (getX() >= Gdx.graphics.getWidth()-getWidth()/2f) {
+            speed = -1;
+        }
+        if (getX() <= 0-getWidth()/2f) {
+            speed = 1;
+        }
     }
     @Override
     public void disparar() {
@@ -39,17 +46,6 @@ public class Enemigo extends Entidad{
     public void update(float dt) {
         definirMovimiento(dt);
         disparar();
-    }
-    public void mover() {
-        translate(8*speed,0);
-    }
-    public void rebotar() {
-        if (getX() >= Gdx.graphics.getWidth()-getWidth()/2f) {
-            setSpeed(-1);
-        }
-        if (getX() <= 0-getWidth()/2f) {
-            setSpeed(1);
-        }
     }
     public boolean balaEstaFueraDePantalla() {
         return bala.getY() < -20;

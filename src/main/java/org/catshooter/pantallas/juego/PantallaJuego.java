@@ -10,8 +10,11 @@ import org.catshooter.animacion.*;
 import org.catshooter.core.Juego;
 import org.catshooter.efectos.Chispa;
 import org.catshooter.efectos.Explosion;
-import org.catshooter.entidades.Enemigo;
+import org.catshooter.entidades.enemigos.Alien;
+import org.catshooter.entidades.enemigos.Enemigo;
 import org.catshooter.entidades.Jugador;
+import org.catshooter.entidades.enemigos.Ufo;
+import org.catshooter.entidades.enemigos.Ufo2;
 import org.catshooter.pantallas.menu.PantallaGameOver;
 import org.catshooter.pantallas.menu.PantallaPausa;
 import org.catshooter.powerups.*;
@@ -162,18 +165,18 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         int i = 0;
         for (int y = 0; y < enemigosAlto; y++) {
             for (int x = 0; x < enemigosAncho; x++) {
-                enemigos[i] = new Enemigo(new Vector2(x*120,y*120), randomizarEnemigos(), enemigoBalaTextura);
+                enemigos[i] = randomizarEnemigos(x,y);
                 enemigos[i].setAumentoVelBala(aumento);
                 i++;
             }
         }
     }
-    public Texture randomizarEnemigos() {
+    public Enemigo randomizarEnemigos(int x, int y) {
         int random = generarRandom();
         return switch (random) {
-            case 0 -> enemigoTextura;
-            case 1 -> enemigoTextura2;
-            case 2 -> enemigoTextura3;
+            case 0 -> new Alien(new Vector2(x*120,y*120), enemigoTextura2, enemigoBalaTextura);
+            case 1 -> new Ufo(new Vector2(x*120,y*120), enemigoTextura, enemigoBalaTextura);
+            case 2 -> new Ufo2(new Vector2(x*120,y*120), enemigoTextura3, enemigoBalaTextura);
             default -> null;
         };
     }
@@ -232,6 +235,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         if (enemigosMuertos() && enemigosCooldown <= 1) {
             generarEnemigos();
             llenarEfectos();
+            hud.añadirOleada();
         }
     }
     public boolean enemigosMuertos() {
