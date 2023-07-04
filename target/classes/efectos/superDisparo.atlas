@@ -1,0 +1,41 @@
+
+superDisparo.png
+size: 256, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+spark-preview1
+  rotate: false
+  xy: 138, 2
+  size: 32, 63
+  orig: 32, 63
+  offset: 0, 0
+  index: -1
+spark-preview2
+  rotate: false
+  xy: 70, 2
+  size: 32, 63
+  orig: 32, 63
+  offset: 0, 0
+  index: -1
+spark-preview3
+  rotate: false
+  xy: 2, 2
+  size: 32, 63
+  orig: 32, 63
+  offset: 0, 0
+  index: -1
+spark-preview4
+  rotate: false
+  xy: 104, 2
+  size: 32, 63
+  orig: 32, 63
+  offset: 0, 0
+  index: -1
+spark-preview5
+  rotate: false
+  xy: 36, 2
+  size: 32, 63
+  orig: 32, 63
+  offset: 0, 0
+  index: -1
