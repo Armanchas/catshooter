@@ -35,7 +35,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected Texture jugadorTextura;
     protected Texture aliadoTextura;
     protected Texture balaTextura;
-    protected Texture enemigoTextura, enemigoTextura2, enemigoTextura3;
+    protected Texture enemigoTextura, enemigoTextura2, enemigoTextura3,finalBossTexture,proyectilJefe;
     protected Texture enemigoBalaTextura;
     protected Enemigo[] enemigos;
     protected int enemigosAncho = 4;
@@ -97,6 +97,8 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         enemigoTextura = new Texture("entidades/ufo.png");
         enemigoTextura2 = new Texture("entidades/alien.png");
         enemigoTextura3 = new Texture("entidades/ufo2.png");
+        finalBossTexture = new Texture("entidades/finalBoss.png");
+        proyectilJefe = new Texture("entidades/proyectilJefe.png");
     }
     public void cargarSonidos() {
         gestorDeAudio.cargarSonido("audio/efecto/nuevosEnemigos.wav","enemigos");

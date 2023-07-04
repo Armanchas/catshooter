@@ -9,9 +9,12 @@ public class Boss extends Enemigo {
     private Sprite[] balas;
     public Boss(Vector2 posicion, Texture imagen, Texture imagenBala) {
         super(posicion, imagen, imagenBala);
-        setScale(5);
-        //balas = new Sprite[6];
-        //llenarBalas(imagenBala);
+        setScale(2.4f);
+
+        estaVivo = true;
+
+        balas = new Sprite[6];
+        llenarBalas(imagenBala);
     }
     public void llenarBalas(Texture imagenBala) {
         for (int i = 0; i < balas.length; i++) {
@@ -20,7 +23,7 @@ public class Boss extends Enemigo {
     }
     @Override
     public void definirMovimiento(float dt) {
-        translate(20*speed,0);
+        translate(10*speed,0);
 
         if (getX() >= Gdx.graphics.getWidth()-getWidth()/2f) {
             speed = -1;
@@ -31,10 +34,15 @@ public class Boss extends Enemigo {
     }
     @Override
     public void disparar() {
-        bala.translate(0, -4.4f-aumentoVelBala);
+        for (int i = 0; i < balas.length; i++) {
+            balas[i].translate(0, -40);
 
-        if (bala.getY() < -400) {
-        bala.setPosition(getX(), getY());
+            if (balas[i].getY() < -400) {
+                balas[i].setPosition(getX()+18, getY()-22);
+            }
         }
+    }
+    public Sprite[] getBalas() {
+        return balas;
     }
 }

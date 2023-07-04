@@ -40,7 +40,7 @@ public class PantallaGameOver extends PantallaAbstracta {
 
     public void gestionarTeclas() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (pantallaActual instanceof PantallaJuego) {
+            if (pantallaActual != null) {
                 juego.setScreen(new PantallaJuego(juego));
             }
         }
