@@ -48,7 +48,7 @@ public class Boss extends Enemigo {
     @Override
     public void disparar() {
         for (int i = 0; i < balas.length; i++) {
-            balas[i].translate(0, -40);
+            balas[i].translate(0, -25);
 
             if (balas[i].getY() < -400) {
                 balas[i].setPosition(getX()+18, getY()-22);

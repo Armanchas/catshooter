@@ -67,4 +67,8 @@ public class Hud {
     public int getPuntos() {
         return puntos;
     }
+
+    public int getOleadas() {
+        return oleadas;
+    }
 }

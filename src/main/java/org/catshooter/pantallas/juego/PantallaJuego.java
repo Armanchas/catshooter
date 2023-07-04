@@ -76,7 +76,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void enviarABossFinal() {
-        if (hud.getPuntos() >= 2000) {
+        if (hud.getOleadas() >= 10) {
             juego.setScreen(new PantallaBossFinal(juego));
         }
     }
