@@ -34,6 +34,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             pausar();
 
+            //reproducirMusicaJuego();
+
             reproducirMusicaBoss();
 
             restarPowerUpCooldown(delta);
@@ -92,6 +94,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
             juego.setScreen(new PantallaBossFinal(juego));
         }
     }
+    /*public void reproducirMusicaJuego(){
+        if (!musicaSonando && hud.getOleadas() < 11) {
+            gestorDeAudio.getMusica("gamemusic").play();
+            musicaSonando = true;
+        }
+    }*/
     public void reproducirMusicaBoss() {
         if (hud.getOleadas() >= 11 && !musicaSonando) {
             gestorDeAudio.getMusica("boss").play();
@@ -122,6 +130,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     @Override
     public void hide() {
         gestorDeAudio.getMusica("boss").pause();
+        //gestorDeAudio.getMusica("gamemusic").pause();
     }
     @Override
     public void dispose() {
@@ -136,6 +145,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         enemigoTextura2.dispose();
         enemigoTextura3.dispose();
         gestorDeAudio.getMusica("boss").dispose();
+        //gestorDeAudio.getMusica("gamemusic").dispose();
     }
 
 }
