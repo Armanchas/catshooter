@@ -88,12 +88,12 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void enviarABossFinal() {
-        if (hud.getOleadas() >= 2 && timerIntro <= 0 && musicaSonando) {
+        if (hud.getOleadas() >= 11 && timerIntro <= 0 && musicaSonando) {
             juego.setScreen(new PantallaBossFinal(juego));
         }
     }
     public void reproducirMusicaBoss() {
-        if (hud.getOleadas() >= 2 && !musicaSonando) {
+        if (hud.getOleadas() >= 11 && !musicaSonando) {
             gestorDeAudio.getMusica("boss").play();
             musicaSonando = true;
             timerIntro = 11f;
@@ -101,7 +101,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void restarTimerIntro(float delta) {
-        if (timerIntro > 0 && hud.getOleadas() >= 2) {
+        if (timerIntro > 0 && hud.getOleadas() >= 11) {
             timerIntro-=delta;
         }
     }
