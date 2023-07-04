@@ -196,6 +196,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         for (Enemigo enemigo : enemigos) {
             if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
                 reproducirSonidoRecibirDaño();
+                enemigo.getBala().setPosition(-2000, 2000);
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 jugador.setTimer(2f);
