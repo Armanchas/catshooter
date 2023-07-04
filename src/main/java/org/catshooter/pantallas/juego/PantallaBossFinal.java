@@ -47,17 +47,19 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         }
     }
     public void comprobarColisionEnemigoConBala(Rectangle hitboxBala) {
-        if (hitboxBala.overlaps(jefeFinal.getBoundingRectangle()) && jefeFinal.EstaVivo()) {
+        if (hitboxBala.overlaps(jefeFinal.getBoundingRectangle()) && !jefeFinal.EsInvencible()) {
             reproducirSonidoExplosion();
-            jefeFinal.setEstaVivo(false);
-            jefeFinal.setSpeed(0);
+            jefeFinal.restarVida();
+            jefeFinal.setEsInvencible(true);
+            jefeFinal.setTiempoInvencibilidad(1f);
             hud.añadirPuntaje();
 
+            if (jefeFinal.getVidas() == 0) {
+                juego.setScreen(new PantallaVictoria(juego));
+            }
             if (!jugador.isBalaMejoradaActiva()) {
                 jugador.getBala().setPosition(-2000, 2000);
             }
-
-            juego.setScreen(new PantallaVictoria(juego));
         }
     }
     @Override
@@ -99,6 +101,8 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
 
         matarEntidad();
 
+        jefeFinal.restarTimer();
+
         actualizarPowerUps(delta, jugador);
 
         Juego.BATCH.begin();
@@ -119,9 +123,9 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
 
         actualizarHud();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        dibujarHitbox();
-        shapeRenderer.end();
+        //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        //dibujarHitbox();
+        //shapeRenderer.end();
     }
     @Override
     public void resize(int i, int i1) {
@@ -145,6 +149,6 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
 
     @Override
     public void dispose() {
-
+        finalBossTexture.dispose();
     }
 }

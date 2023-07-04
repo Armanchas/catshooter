@@ -78,9 +78,10 @@ public class PantallaJuegoMultiplayer extends PantallaJuegoAbstracta {
             Juego.BATCH.end();
 
             actualizarHud();
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            dibujarHitbox();
-            shapeRenderer.end();
+
+            //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            //dibujarHitbox();
+            //shapeRenderer.end();
         }
     }
     @Override

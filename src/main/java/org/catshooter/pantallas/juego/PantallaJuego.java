@@ -60,9 +60,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             actualizarHud();
 
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            dibujarHitbox();
-            shapeRenderer.end();
+            //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            //dibujarHitbox();
+            //shapeRenderer.end();
 
             enviarABossFinal();
         }
@@ -76,7 +76,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void enviarABossFinal() {
-        if (hud.getPuntos() >= 2) {
+        if (hud.getPuntos() >= 2000) {
             juego.setScreen(new PantallaBossFinal(juego));
         }
     }

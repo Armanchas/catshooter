@@ -7,14 +7,27 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Boss extends Enemigo {
     private Sprite[] balas;
+    private int vidas;
+    private boolean esInvencible;
+    private float tiempoInvencibilidad;
     public Boss(Vector2 posicion, Texture imagen, Texture imagenBala) {
         super(posicion, imagen, imagenBala);
         setScale(2.4f);
 
-        estaVivo = true;
+        tiempoInvencibilidad = 0;
+
+        vidas = 5;
 
         balas = new Sprite[6];
         llenarBalas(imagenBala);
+    }
+    public void restarTimer() {
+        if (tiempoInvencibilidad > 0) {
+            tiempoInvencibilidad-=Gdx.graphics.getDeltaTime();
+        }
+        if (tiempoInvencibilidad <= 0) {
+            esInvencible = false;
+        }
     }
     public void llenarBalas(Texture imagenBala) {
         for (int i = 0; i < balas.length; i++) {
@@ -42,7 +55,22 @@ public class Boss extends Enemigo {
             }
         }
     }
+    public void restarVida() {
+        vidas--;
+    }
     public Sprite[] getBalas() {
         return balas;
+    }
+    public int getVidas() {
+        return vidas;
+    }
+    public boolean EsInvencible() {
+        return esInvencible;
+    }
+    public void setEsInvencible(boolean esInvencible) {
+        this.esInvencible = esInvencible;
+    }
+    public void setTiempoInvencibilidad(float tiempoInvencibilidad) {
+        this.tiempoInvencibilidad = tiempoInvencibilidad;
     }
 }
