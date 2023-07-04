@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import org.catshooter.controladores.GestorDeAudio;
 import org.catshooter.entidades.Jugador;
 
-public abstract class PowerUp extends Sprite implements Disposable {
+public abstract class   PowerUp extends Sprite implements Disposable {
     protected float cooldown;
     protected float duracionHabilidad;
     protected boolean estaEnPantalla;

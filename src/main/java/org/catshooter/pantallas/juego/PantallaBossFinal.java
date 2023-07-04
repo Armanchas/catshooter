@@ -15,13 +15,18 @@ import org.lwjgl.opengl.GL20;
 
 public class PantallaBossFinal extends PantallaJuegoAbstracta {
     private final Boss jefeFinal;
-
+    private boolean musicaSonando;
     public PantallaBossFinal(Juego juego) {
         super(juego);
         fondo = new Texture("juego/fondo2.png");
 
         jugador = new Jugador(jugadorTextura, balaTextura);
         jefeFinal = new Boss(new Vector2(0, 0), finalBossTexture, proyectilJefe);
+
+        gestorDeAudio.getMusica("boss").play();
+        gestorDeAudio.getMusica("boss").setPosition(11);
+
+        musicaSonando = true;
     }
 
     public void matarEntidad() {
@@ -55,7 +60,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
             hud.añadirPuntaje();
 
             if (jefeFinal.getVidas() == 0) {
-                juego.setScreen(new PantallaVictoria(juego));
+                cambiarPantalla(new PantallaVictoria(juego));
             }
             if (!jugador.isBalaMejoradaActiva()) {
                 jugador.getBala().setPosition(-2000, 2000);
@@ -80,7 +85,9 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
     }
     @Override
     public void show() {
-
+        if (musicaSonando) {
+            gestorDeAudio.getMusica("boss").play();
+        }
     }
 
     @Override
@@ -144,7 +151,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
 
     @Override
     public void hide() {
-
+        gestorDeAudio.getMusica("boss").pause();
     }
 
     @Override

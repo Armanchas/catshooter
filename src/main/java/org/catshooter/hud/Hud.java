@@ -59,11 +59,6 @@ public class Hud {
     public Stage getStage() {
         return stage;
     }
-
-    public Hud(int puntos) {
-        this.puntos = puntos;
-    }
-
     public int getPuntos() {
         return puntos;
     }

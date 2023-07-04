@@ -2,6 +2,7 @@ package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
@@ -9,13 +10,20 @@ import org.catshooter.pantallas.menu.PantallaGameOver;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaJuego extends PantallaJuegoAbstracta {
+    private float timerIntro;
+    private boolean musicaSonando;
     public PantallaJuego(Juego juego) {
         super(juego);
 
+        timerIntro = 0;
         jugador = new Jugador(jugadorTextura,balaTextura);
+
     }
     @Override
     public void show() {
+        if (musicaSonando) {
+            gestorDeAudio.getMusica("boss").play();
+        }
     }
     @Override
     public void render(float delta) {
@@ -26,9 +34,13 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             pausar();
 
+            reproducirMusicaBoss();
+
             restarPowerUpCooldown(delta);
 
             restarEnemigosCooldown(delta);
+
+            restarTimerIntro(delta);
 
             if (!jugador.isEstaVivo()) {
                 cambiarPantalla(new PantallaGameOver(juego));
@@ -76,8 +88,21 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void enviarABossFinal() {
-        if (hud.getOleadas() >= 10) {
+        if (hud.getOleadas() >= 2 && timerIntro <= 0 && musicaSonando) {
             juego.setScreen(new PantallaBossFinal(juego));
+        }
+    }
+    public void reproducirMusicaBoss() {
+        if (hud.getOleadas() >= 2 && !musicaSonando) {
+            gestorDeAudio.getMusica("boss").play();
+            musicaSonando = true;
+            timerIntro = 11f;
+            enemigosCooldown = 100;
+        }
+    }
+    public void restarTimerIntro(float delta) {
+        if (timerIntro > 0 && hud.getOleadas() >= 2) {
+            timerIntro-=delta;
         }
     }
     @Override
@@ -87,7 +112,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
     @Override
     public void pause() {
-
     }
 
     @Override
@@ -97,7 +121,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
     @Override
     public void hide() {
-
+        gestorDeAudio.getMusica("boss").pause();
     }
     @Override
     public void dispose() {
@@ -111,5 +135,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         aliadoTextura.dispose();
         enemigoTextura2.dispose();
         enemigoTextura3.dispose();
+        gestorDeAudio.getMusica("boss").dispose();
     }
+
 }
