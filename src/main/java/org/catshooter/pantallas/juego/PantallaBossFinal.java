@@ -126,10 +126,6 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         Juego.BATCH.end();
 
         actualizarHud();
-
-        //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        //dibujarHitbox();
-        //shapeRenderer.end();
     }
     @Override
     public void resize(int i, int i1) {

@@ -3,9 +3,7 @@ package org.catshooter.pantallas.juego;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.animacion.AnimacionDerecha;
@@ -54,7 +52,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     protected float powerUpsCooldown;
     protected float enemigosCooldown;
     protected float aumento;
-    protected ShapeRenderer shapeRenderer;
 
     public PantallaJuegoAbstracta(Juego juego) {
         this.juego = juego;
@@ -71,7 +68,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         animacionFrente = new AnimacionFrente();
         animacionDerecha = new AnimacionDerecha();
         animacionIzquierda = new AnimacionIzquierda();
-        shapeRenderer = new ShapeRenderer();
 
         powerUpsCooldown = 1;
         enemigosCooldown = 0;
@@ -131,14 +127,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         long id = gestorDeAudio.getSonido("recibirDaño").play();
         gestorDeAudio.getSonido("recibirDaño").setVolume(id, 0.09f);
     }
-    public void dibujarHitbox() {
-        Rectangle hitbox = jugador.getBoundingRectangle();
-
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
-    }
-
     public void actualizarHud() {
         Juego.BATCH.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().draw();
@@ -306,7 +294,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         if (powerUpsCooldown <= 0) {
             powerUp.setPosition(x, y);
             powerUp.setEstaEnPantalla(true);
-            powerUpsCooldown = 15;
+            powerUpsCooldown = 12;
             powerUp.setCooldown(5);
         }
     }
