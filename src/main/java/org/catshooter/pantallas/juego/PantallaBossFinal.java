@@ -16,11 +16,11 @@ import org.lwjgl.opengl.GL20;
 public class PantallaBossFinal extends PantallaJuegoAbstracta {
     private final Boss jefeFinal;
     private boolean musicaSonando;
-    public PantallaBossFinal(Juego juego) {
+    public PantallaBossFinal(Juego juego, Jugador jugador) {
         super(juego);
         fondo = new Texture("juego/fondo2.png");
 
-        jugador = new Jugador(jugadorTextura, balaTextura);
+        this.jugador = jugador;
         jefeFinal = new Boss(new Vector2(0, 0), finalBossTexture, proyectilJefe);
 
         gestorDeAudio.getMusica("boss").play();
