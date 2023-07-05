@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import org.catshooter.core.Juego;
+import org.catshooter.pantallas.juego.PantallaBossFinal;
 import org.catshooter.pantallas.juego.PantallaJuego;
 import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
 import org.catshooter.pantallas.juego.PantallaJuegoMultiplayer;
@@ -45,6 +46,9 @@ public class PantallaGameOver extends PantallaAbstracta {
                 juego.setScreen(new PantallaJuegoMultiplayer(juego));
             }
             if (pantallaActual instanceof PantallaJuego) {
+                juego.setScreen(new PantallaJuego(juego));
+            }
+            if (pantallaActual instanceof PantallaBossFinal) {
                 juego.setScreen(new PantallaJuego(juego));
             }
         }
