@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import org.catshooter.core.Juego;
 import org.catshooter.pantallas.juego.PantallaJuego;
 import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
+import org.catshooter.pantallas.juego.PantallaJuegoMultiplayer;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaGameOver extends PantallaAbstracta {
@@ -40,7 +41,10 @@ public class PantallaGameOver extends PantallaAbstracta {
 
     public void gestionarTeclas() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (pantallaActual != null) {
+            if (pantallaActual instanceof PantallaJuegoMultiplayer) {
+                juego.setScreen(new PantallaJuegoMultiplayer(juego));
+            }
+            if (pantallaActual instanceof PantallaJuego) {
                 juego.setScreen(new PantallaJuego(juego));
             }
         }

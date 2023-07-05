@@ -5,6 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import org.catshooter.animacion.AnimacionDerecha;
+import org.catshooter.animacion.AnimacionFrente;
+import org.catshooter.animacion.AnimacionIzquierda;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.pantallas.menu.PantallaGameOver;
@@ -85,7 +88,7 @@ public class PantallaJuegoMultiplayer extends PantallaJuegoAbstracta {
     }
     @Override
     public void cambiarPantalla(Screen pantalla) {
-        PantallaJuego pantallaAnterior = (PantallaJuego) juego.getScreen();
+        PantallaJuegoMultiplayer pantallaAnterior = (PantallaJuegoMultiplayer) juego.getScreen();
         juego.setScreen(pantalla);
         socket.close();
         if (pantallaAnterior != null) {
@@ -128,14 +131,7 @@ public class PantallaJuegoMultiplayer extends PantallaJuegoAbstracta {
     public void dibujarAliados() {
         for(HashMap.Entry<String, Jugador> entry : aliados.entrySet()){
             if (entry.getValue().isEstaVivo()) {
-                if (entry.getValue().getDireccion() == 1){
-                    animacionIzquierda.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
-                }
-                else if (entry.getValue().getDireccion() == 2){
-                    animacionDerecha.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
-                }else {
-                    animacionFrente.animar(Juego.BATCH, entry.getValue().getX()-16, entry.getValue().getY());
-                }
+                entry.getValue().draw(Juego.BATCH);
             }
             entry.getValue().getBala().draw(Juego.BATCH);
         }
