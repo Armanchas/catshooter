@@ -25,6 +25,19 @@ public class PantallaGameOver extends PantallaAbstracta {
         gestorDeAudio.getMusica("gameover").setVolume(0.12f);
         gestorDeAudio.getMusica("gameover").play();
     }
+    public void gestionarTeclas() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (pantallaActual instanceof PantallaJuegoMultiplayer) {
+                juego.setScreen(new PantallaJuegoMultiplayer(juego));
+            }
+            if (pantallaActual instanceof PantallaJuego) {
+                juego.setScreen(new PantallaJuego(juego));
+            }
+            if (pantallaActual instanceof PantallaBossFinal) {
+                juego.setScreen(new PantallaJuego(juego));
+            }
+        }
+    }
     @Override
     public void show() {
 
@@ -38,20 +51,6 @@ public class PantallaGameOver extends PantallaAbstracta {
         batch.begin();
         batch.draw(imagen, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
-    }
-
-    public void gestionarTeclas() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (pantallaActual instanceof PantallaJuegoMultiplayer) {
-                juego.setScreen(new PantallaJuegoMultiplayer(juego));
-            }
-            if (pantallaActual instanceof PantallaJuego) {
-                juego.setScreen(new PantallaJuego(juego));
-            }
-            if (pantallaActual instanceof PantallaBossFinal) {
-                juego.setScreen(new PantallaJuego(juego));
-            }
-        }
     }
     @Override
     public void resize(int width, int height) {}
