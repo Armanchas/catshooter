@@ -98,7 +98,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         gestorDeAudio.getMusica("boss").setVolume(0.14f);
 
         gestorDeAudio.cargarMusica("audio/juego/musicajuego.wav","gamemusic");
-        gestorDeAudio.getMusica("gamemusic").setVolume(0.10f);
+        gestorDeAudio.getMusica("gamemusic").setVolume(0.08f);
         gestorDeAudio.getMusica("gamemusic").setLooping(true);
     }
 

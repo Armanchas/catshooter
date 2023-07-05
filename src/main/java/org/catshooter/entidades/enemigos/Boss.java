@@ -36,7 +36,7 @@ public class Boss extends Enemigo {
     }
     @Override
     public void definirMovimiento(float dt) {
-        translate(10*speed,0);
+        translate(12*speed,0);
 
         if (getX() >= Gdx.graphics.getWidth()-getWidth()/2f) {
             speed = -1;
@@ -48,7 +48,7 @@ public class Boss extends Enemigo {
     @Override
     public void disparar() {
         for (int i = 0; i < balas.length; i++) {
-            balas[i].translate(0, -25);
+            balas[i].translate(0, -30);
 
             if (balas[i].getY() < -400) {
                 balas[i].setPosition(getX()+18, getY()-22);
