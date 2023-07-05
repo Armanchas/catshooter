@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import org.catshooter.core.Juego;
-import org.catshooter.pantallas.juego.PantallaJuegoAbstracta;
 import org.lwjgl.opengl.GL20;
 
 public class PantallaVictoria extends PantallaAbstracta {

@@ -5,8 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class Boss extends Enemigo {
-    private Sprite[] balas;
+    private List<Sprite> balas;
     private int vidas;
     private boolean esInvencible;
     private float tiempoInvencibilidad;
@@ -18,7 +23,7 @@ public class Boss extends Enemigo {
 
         vidas = 20;
 
-        balas = new Sprite[6];
+        balas = new ArrayList<>();
         llenarBalas(imagenBala);
     }
     public void restarTimer() {
@@ -30,9 +35,9 @@ public class Boss extends Enemigo {
         }
     }
     public void llenarBalas(Texture imagenBala) {
-        for (int i = 0; i < balas.length; i++) {
-            balas[i] = new Sprite(imagenBala);
-        }
+        balas = IntStream.range(0, 6)
+                .mapToObj(bala -> new Sprite(imagenBala))
+                .collect(Collectors.toList());
     }
     @Override
     public void definirMovimiento(float dt) {
@@ -47,18 +52,18 @@ public class Boss extends Enemigo {
     }
     @Override
     public void disparar() {
-        for (int i = 0; i < balas.length; i++) {
-            balas[i].translate(0, -25);
+        balas.forEach(bala -> {
+            bala.translate(0, -25);
 
-            if (balas[i].getY() < -400) {
-                balas[i].setPosition(getX()+18, getY()-22);
+            if (bala.getY() < -400) {
+                bala.setPosition(getX() + 18, getY() - 22);
             }
-        }
+        });
     }
     public void restarVida() {
         vidas--;
     }
-    public Sprite[] getBalas() {
+    public List<Sprite> getBalas() {
         return balas;
     }
     public int getVidas() {

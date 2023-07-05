@@ -12,18 +12,16 @@ public class Velocidad extends PowerUp {
     public void aplicarHabilidad(float dt, Jugador jugador) {
         Rectangle jugadorHitbox = jugador.getBoundingRectangle();
 
-        if (cooldown > 0 && estaEnPantalla) {
-            restarCooldown(dt);
-        }
+        gestionarTiempoEnPantalla(dt);
+
+        gestionarDuracionHabilidad(dt);
+
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
             reproducirSonido();
             duracionHabilidad = 5;
             setEstaEnPantalla(false);
             setPosition(2000,2000);
             jugador.setSpeed(400*dt);
-        }
-        if (duracionHabilidad > 0) {
-            restarTimer(dt);
         }
         if (duracionHabilidad <= 0) {
             jugador.setSpeed(200*dt);

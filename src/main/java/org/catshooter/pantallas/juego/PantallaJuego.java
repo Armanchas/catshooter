@@ -2,8 +2,6 @@ package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import org.catshooter.core.Juego;
 import org.catshooter.entidades.Jugador;
 import org.catshooter.pantallas.menu.PantallaGameOver;
@@ -56,9 +54,9 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
 
             Juego.BATCH.draw(fondo,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-            matarEntidad(Juego.BATCH);
+            gestionarColisiones();
 
-            generarPowerUps(generarRandom());
+            gestionarPowerUps(generarRandom());
 
             if (powerUpEnPantalla != null) {
                 powerUpEnPantalla.draw(Juego.BATCH);
@@ -140,7 +138,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         enemigoTextura2.dispose();
         enemigoTextura3.dispose();
         gestorDeAudio.getMusica("boss").dispose();
-        //gestorDeAudio.getMusica("gamemusic").dispose();
+        gestorDeAudio.getMusica("gamemusic").dispose();
     }
 
 }

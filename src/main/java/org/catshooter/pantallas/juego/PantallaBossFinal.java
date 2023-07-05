@@ -3,7 +3,6 @@ package org.catshooter.pantallas.juego;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.catshooter.core.Juego;
@@ -15,7 +14,7 @@ import org.lwjgl.opengl.GL20;
 
 public class PantallaBossFinal extends PantallaJuegoAbstracta {
     private final Boss jefeFinal;
-    private boolean musicaSonando;
+    private final boolean musicaSonando;
     public PantallaBossFinal(Juego juego, Jugador jugador) {
         super(juego);
         fondo = new Texture("juego/fondo2.png");
@@ -29,7 +28,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         musicaSonando = true;
     }
 
-    public void matarEntidad() {
+    public void gestionarColisiones() {
         Rectangle hitboxJugador = jugador.getBoundingRectangle();
         Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
 
@@ -37,10 +36,10 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         comprobarColisionEnemigoConBala(hitboxBala);
     }
     public void comprobarColisionBalaConJugador(Rectangle hitboxJugador) {
-        for (int i = 0; i < jefeFinal.getBalas().length; i++) {
-            if (jefeFinal.getBalas()[i].getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+        jefeFinal.getBalas().forEach(bala -> {
+            if (bala.getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
                 reproducirSonidoRecibirDaño();
-                jefeFinal.getBala().setPosition(-2000, 2000);
+                bala.setPosition(-2000, 2000);
                 jugador.restarVida();
                 jugador.setEsInvencible(true);
                 jugador.setTimer(2f);
@@ -49,7 +48,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
                     jugador.setEstaVivo(false);
                 }
             }
-        }
+        });
     }
     public void comprobarColisionEnemigoConBala(Rectangle hitboxBala) {
         if (hitboxBala.overlaps(jefeFinal.getBoundingRectangle()) && !jefeFinal.EsInvencible()) {
@@ -78,9 +77,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
     public void dibujarBoss() {
         if (jefeFinal.EstaVivo()) {
             jefeFinal.draw(Juego.BATCH);
-            for (int i = 0; i < jefeFinal.getBalas().length; i++) {
-                jefeFinal.getBalas()[i].draw(Juego.BATCH);
-            }
+            jefeFinal.getBalas().forEach(bala -> bala.draw(Juego.BATCH));
         }
     }
     @Override
@@ -106,7 +103,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
         jefeFinal.update(delta);
         jugador.update(delta);
 
-        matarEntidad();
+        gestionarColisiones();
 
         jefeFinal.restarTimer();
 
@@ -116,7 +113,7 @@ public class PantallaBossFinal extends PantallaJuegoAbstracta {
 
         Juego.BATCH.draw(fondo,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-        generarPowerUps(generarRandom());
+        gestionarPowerUps(generarRandom());
 
         if (powerUpEnPantalla != null) {
             powerUpEnPantalla.draw(Juego.BATCH);

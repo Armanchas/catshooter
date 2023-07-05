@@ -12,18 +12,16 @@ public class BalaMejorada extends PowerUp {
     public void aplicarHabilidad(float dt, Jugador jugador) {
         Rectangle jugadorHitbox = jugador.getBoundingRectangle();
 
-        if (cooldown > 0 && estaEnPantalla) {
-            restarCooldown(dt);
-        }
+        gestionarTiempoEnPantalla(dt);
+
+        gestionarDuracionHabilidad(dt);
+
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
             reproducirSonido();
             duracionHabilidad = 8;
             setEstaEnPantalla(false);
             setPosition(2000,2000);
             jugador.setBalaMejoradaActiva(true);
-        }
-        if (duracionHabilidad > 0) {
-            restarTimer(dt);
         }
         if (duracionHabilidad <= 0) {
             jugador.setBalaMejoradaActiva(false);

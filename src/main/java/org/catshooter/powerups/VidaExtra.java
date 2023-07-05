@@ -12,9 +12,8 @@ public class VidaExtra extends PowerUp {
     public void aplicarHabilidad(float dt, Jugador jugador) {
         Rectangle jugadorHitbox = jugador.getBoundingRectangle();
 
-        if (cooldown > 0 && estaEnPantalla) {
-            restarCooldown(dt);
-        }
+        gestionarTiempoEnPantalla(dt);
+
         if (jugadorHitbox.overlaps(getBoundingRectangle())) {
             reproducirSonido();
             setEstaEnPantalla(false);

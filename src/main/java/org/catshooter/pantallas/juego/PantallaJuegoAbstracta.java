@@ -3,14 +3,11 @@ package org.catshooter.pantallas.juego;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.socket.client.Socket;
 import org.catshooter.animacion.AnimacionDerecha;
 import org.catshooter.animacion.AnimacionFrente;
 import org.catshooter.animacion.AnimacionIzquierda;
@@ -81,7 +78,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
 
         chispa = new Chispa();
 
-        enemigos = new Enemigo[enemigosAlto * enemigosAncho];
+        enemigos = new Enemigo[enemigosAncho*enemigosAlto];
         powerUps = new PowerUp[3];
         explosiones = new Explosion[enemigos.length];
 
@@ -92,7 +89,7 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         generarEnemigos();
         crearPowerUps();
     }
-
+    public abstract void cambiarPantalla(Screen screen);
     public void cargarMusica() {
         gestorDeAudio.cargarMusica("audio/juego/boss.wav", "boss");
         gestorDeAudio.getMusica("boss").setVolume(0.14f);
@@ -134,15 +131,11 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         long id = gestorDeAudio.getSonido("recibirDaño").play();
         gestorDeAudio.getSonido("recibirDaño").setVolume(id, 0.09f);
     }
-
-    public abstract void cambiarPantalla(Screen screen);
-
     public void dibujarHitbox() {
         Rectangle hitbox = jugador.getBoundingRectangle();
 
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-
         shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 
@@ -152,7 +145,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
 
         hud.modificarVidas(jugador);
     }
-
     public void actualizarEntidades(float delta) {
         jugador.update(delta);
 
@@ -160,11 +152,8 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             enemigo.update(delta);
         }
     }
-
     public void dibujarJugador() {
-        animacionFrente.setStateTime(animacionFrente.getStateTime() + Gdx.graphics.getDeltaTime());
-        animacionDerecha.setStateTime(animacionDerecha.getStateTime() + Gdx.graphics.getDeltaTime());
-        animacionIzquierda.setStateTime(animacionIzquierda.getStateTime() + Gdx.graphics.getDeltaTime());
+        actualizarFramesDeAnimaciones();
 
         if (jugador.isEstaVivo()) {
             if (jugador.getDireccion() == 1) {
@@ -179,7 +168,11 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             jugador.getBala().draw(Juego.BATCH);
         }
     }
-
+    public void actualizarFramesDeAnimaciones() {
+        animacionFrente.setStateTime(animacionFrente.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionDerecha.setStateTime(animacionDerecha.getStateTime() + Gdx.graphics.getDeltaTime());
+        animacionIzquierda.setStateTime(animacionIzquierda.getStateTime() + Gdx.graphics.getDeltaTime());
+    }
     public void generarEnemigos() {
         reproducirSonidoEnemigos();
         aumento += 0.4f;
@@ -192,7 +185,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
     }
-
     public Enemigo randomizarEnemigos(int x, int y) {
         int random = generarRandom();
         return switch (random) {
@@ -202,7 +194,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             default -> null;
         };
     }
-
     public void dibujarEnemigos() {
         for (Enemigo enemigo : enemigos) {
             enemigo.getBala().draw(Juego.BATCH);
@@ -214,45 +205,53 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
     }
-
-    public void matarEntidad(SpriteBatch batch) {
-        Rectangle hitboxJugador = jugador.getBoundingRectangle();
-        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
-
+    public void gestionarColisiones() {
         int i = 0;
         for (Enemigo enemigo : enemigos) {
-            if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
-                reproducirSonidoRecibirDaño();
-                enemigo.getBala().setPosition(-2000, 2000);
-                jugador.restarVida();
-                jugador.setEsInvencible(true);
-                jugador.setTimer(2f);
-
-                if (jugador.getVidas() == 0) {
-                    jugador.setEstaVivo(false);
-                }
-            }
-            if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
-                reproducirSonidoExplosion();
-                enemigo.setEstaVivo(false);
-                enemigo.setSpeed(0);
-                hud.añadirPuntaje();
-
-                if (!jugador.isBalaMejoradaActiva()) {
-                    jugador.getBala().setPosition(-2000, 2000);
-                }
-            }
-            if (!enemigo.EstaVivo()) {
-                float x = enemigo.getX();
-                float y = enemigo.getY();
-
-                explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
-                explosiones[i].animar(batch, x, y);
-            }
+            comprobarColisionEnemigoBalaYJugador(enemigo);
+            comprobarColisionJugadorBalaYEnemigo(enemigo);
+            animarExplosion(enemigo, i);
             i++;
         }
     }
+    public void comprobarColisionEnemigoBalaYJugador(Enemigo enemigo) {
+        Rectangle hitboxJugador = jugador.getBoundingRectangle();
 
+        if (enemigo.getBala().getBoundingRectangle().overlaps(hitboxJugador) && !jugador.EsInvencible()) {
+            reproducirSonidoRecibirDaño();
+            enemigo.getBala().setPosition(-2000, 2000);
+            jugador.restarVida();
+            jugador.setEsInvencible(true);
+            jugador.setTimer(2f);
+
+            if (jugador.getVidas() == 0) {
+                jugador.setEstaVivo(false);
+            }
+        }
+    }
+    public void comprobarColisionJugadorBalaYEnemigo(Enemigo enemigo) {
+        Rectangle hitboxBala = jugador.getBala().getBoundingRectangle();
+
+        if (hitboxBala.overlaps(enemigo.getBoundingRectangle()) && enemigo.EstaVivo()) {
+            reproducirSonidoExplosion();
+            enemigo.setEstaVivo(false);
+            enemigo.setSpeed(0);
+            hud.añadirPuntaje();
+
+            if (!jugador.isBalaMejoradaActiva()) {
+                jugador.getBala().setPosition(-2000, 2000);
+            }
+        }
+    }
+    public void animarExplosion(Enemigo enemigo, int i) {
+        if (!enemigo.EstaVivo()) {
+            float x = enemigo.getX();
+            float y = enemigo.getY();
+
+            explosiones[i].setFrameActual(explosiones[i].getFrameActual() + Gdx.graphics.getDeltaTime());
+            explosiones[i].animar(Juego.BATCH, x, y);
+        }
+    }
     public void respawnearEnemigos() {
         if (enemigosMuertos() && enemigosCooldown <= 0) {
             enemigosCooldown = 5;
@@ -263,7 +262,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             llenarEfectos();
         }
     }
-
     public boolean enemigosMuertos() {
         for (Enemigo enemigo : enemigos) {
             if (enemigo.EstaVivo()) {
@@ -271,68 +269,68 @@ public abstract class PantallaJuegoAbstracta implements Screen {
             }
         }
         return true;
-
     }
-
     public void llenarEfectos() {
         for (int i = 0; i < explosiones.length; i++) {
             explosiones[i] = new Explosion();
         }
     }
-
     public void crearPowerUps() {
         powerUps[0] = new VidaExtra(vidaExtraTextura);
         powerUps[1] = new Velocidad(velocidadTextura);
         powerUps[2] = new BalaMejorada(balaMejoradaTextura);
     }
-
-    public void generarPowerUps(int random) {
+    public void gestionarPowerUps(int random) {
         PowerUp powerUp = powerUps[random];
 
         float x = (float) (Math.random() * 680) + 120;
         float y = (float) (Math.random() * 200) + 100;
 
+        establecerPowerUpActual(powerUp);
+        desaparecerPowerUp(powerUp);
+        generarNuevoPowerUp(powerUp,x,y);
+
+    }
+    public void establecerPowerUpActual(PowerUp powerUp) {
         if (powerUp.EstaEnPantalla()) {
             powerUpEnPantalla = powerUp;
         }
+    }
+    public void desaparecerPowerUp(PowerUp powerUp) {
         if (powerUp.getCooldown() <= 0) {
             powerUp.setEstaEnPantalla(false);
             powerUp.setPosition(2000, 2000);
         }
+    }
+    public void generarNuevoPowerUp(PowerUp powerUp, float x, float y) {
         if (powerUpsCooldown <= 0) {
             powerUp.setPosition(x, y);
             powerUp.setEstaEnPantalla(true);
             powerUpsCooldown = 15;
             powerUp.setCooldown(5);
         }
-
     }
-
     public void actualizarPowerUps(float dt, Jugador jugador) {
         for (PowerUp powerUp : powerUps) {
             powerUp.aplicarHabilidad(dt, jugador);
         }
     }
-
     public void restarPowerUpCooldown(float dt) {
         if (powerUpsCooldown >= 0) {
             powerUpsCooldown -= dt;
         }
     }
-
     public void restarEnemigosCooldown(float dt) {
         if (enemigosCooldown >= 0) {
             enemigosCooldown -= dt;
         }
     }
-
     public void animarChispa() {
         if (jugador.isBalaMejoradaActiva()) {
             chispa.setFrameActual(chispa.getFrameActual() + Gdx.graphics.getDeltaTime());
             chispa.animar(Juego.BATCH, jugador.getBala().getX() - 14, jugador.getBala().getY() - 45);
         }
     }
-
     public void pausar() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             juego.setScreen(new PantallaPausa(juego));
@@ -344,7 +342,6 @@ public abstract class PantallaJuegoAbstracta implements Screen {
     public Jugador getJugador() {
         return jugador;
     }
-
     public GestorDeAudio getGestorDeAudio() {
         return gestorDeAudio;
     }

@@ -13,10 +13,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import org.catshooter.entidades.Jugador;
 
 public class Hud {
-    private Stage stage;
-    private Viewport viewport;
+    private final Stage stage;
+    private final Table table;
     private int puntos,oleadas;
-    private int vidas;
+    private final int vidas;
     private Label puntosLabel, contadorVidasLabel, vidasLabel, puntajeLabel,oleadasLabel,contadorOleadasLabel;
 
     public Hud(SpriteBatch batch) {
@@ -24,19 +24,27 @@ public class Hud {
         oleadas = 1;
         vidas = 3;
 
-        viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), new OrthographicCamera());
+        Viewport viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, batch);
 
-        Table table = new Table();
+        table = new Table();
         table.top();
         table.setFillParent(true);
+
+        crearEtiquetas();
+        organizarTable();
+
+        stage.addActor(table);
+    }
+    public void crearEtiquetas() {
         puntosLabel = new Label(String.format("%03d", puntos), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         vidasLabel = new Label(String.format("%01d",vidas), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         contadorOleadasLabel = new Label(String.format("%01d",oleadas), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         puntajeLabel = new Label("PUNTAJE", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         contadorVidasLabel = new Label("VIDAS", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         oleadasLabel = new Label("OLEADA", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-
+    }
+    public void organizarTable() {
         table.add(puntajeLabel).expandX().padTop(10);
         table.add(oleadasLabel).expandX().padTop(10);
         table.add(contadorVidasLabel).expandX().padTop(10);
@@ -44,8 +52,6 @@ public class Hud {
         table.add(puntosLabel).expandX();
         table.add(contadorOleadasLabel).expandX();
         table.add(vidasLabel).expandX();
-
-        stage.addActor(table);
     }
     public void añadirPuntaje() {
         puntosLabel.setText(puntos+=10*oleadas);
@@ -59,10 +65,6 @@ public class Hud {
     public Stage getStage() {
         return stage;
     }
-    public int getPuntos() {
-        return puntos;
-    }
-
     public int getOleadas() {
         return oleadas;
     }

@@ -30,6 +30,16 @@ public abstract class   PowerUp extends Sprite implements Disposable {
         long id = gestorDeAudio.getSonido("powerUp").play();
         gestorDeAudio.getSonido("powerUp").setVolume(id,0.04f);
     }
+    public void gestionarTiempoEnPantalla(float dt) {
+        if (cooldown > 0 && estaEnPantalla) {
+            restarCooldown(dt);
+        }
+    }
+    public void gestionarDuracionHabilidad(float dt) {
+        if (duracionHabilidad > 0) {
+            restarTimer(dt);
+        }
+    }
     public abstract void aplicarHabilidad(float dt, Jugador jugador);
     public void restarTimer(float dt) {
         duracionHabilidad -=dt;

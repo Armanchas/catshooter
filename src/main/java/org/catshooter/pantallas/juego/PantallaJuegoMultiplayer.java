@@ -2,7 +2,6 @@ package org.catshooter.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -18,7 +17,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class PantallaJuegoMultiplayer extends PantallaJuegoAbstracta {
-    private HashMap<String,Jugador> aliados;
+    private final HashMap<String,Jugador> aliados;
     private Socket socket;
     public PantallaJuegoMultiplayer(Juego juego) {
         super(juego);
@@ -60,9 +59,9 @@ public class PantallaJuegoMultiplayer extends PantallaJuegoAbstracta {
 
             Juego.BATCH.draw(fondo,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
-            matarEntidad(Juego.BATCH);
+            gestionarColisiones();
 
-            generarPowerUps(generarRandom());
+            gestionarPowerUps(generarRandom());
 
             if (powerUpEnPantalla != null) {
                 powerUpEnPantalla.draw(Juego.BATCH);
