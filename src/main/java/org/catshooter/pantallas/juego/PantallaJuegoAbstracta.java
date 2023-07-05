@@ -97,9 +97,9 @@ public abstract class PantallaJuegoAbstracta implements Screen {
         gestorDeAudio.cargarMusica("audio/juego/boss.wav", "boss");
         gestorDeAudio.getMusica("boss").setVolume(0.14f);
 
-        /*gestorDeAudio.cargarMusica("audio/juego/musicajuego.wav","gamemusic");
-        gestorDeAudio.getMusica("gamemusic").setVolume(0.12f);
-        gestorDeAudio.getMusica("gamemusic").setLooping(true);*/
+        gestorDeAudio.cargarMusica("audio/juego/musicajuego.wav","gamemusic");
+        gestorDeAudio.getMusica("gamemusic").setVolume(0.10f);
+        gestorDeAudio.getMusica("gamemusic").setLooping(true);
     }
 
     public void cargarTexturas() {

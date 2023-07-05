@@ -21,6 +21,8 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     }
     @Override
     public void show() {
+        gestorDeAudio.getMusica("gamemusic").play();
+
         if (musicaSonando) {
             gestorDeAudio.getMusica("boss").play();
         }
@@ -33,8 +35,6 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         if(jugador != null) {
 
             pausar();
-
-            //reproducirMusicaJuego();
 
             reproducirMusicaBoss();
 
@@ -90,18 +90,13 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void enviarABossFinal() {
-        if (hud.getOleadas() >= 11 && timerIntro <= 0 && musicaSonando) {
+        if (hud.getOleadas() >= 10 && timerIntro <= 0 && musicaSonando) {
             juego.setScreen(new PantallaBossFinal(juego));
         }
     }
-    /*public void reproducirMusicaJuego(){
-        if (!musicaSonando && hud.getOleadas() < 11) {
-            gestorDeAudio.getMusica("gamemusic").play();
-            musicaSonando = true;
-        }
-    }*/
     public void reproducirMusicaBoss() {
-        if (hud.getOleadas() >= 11 && !musicaSonando) {
+        if (hud.getOleadas() >= 10 && !musicaSonando) {
+            gestorDeAudio.getMusica("gamemusic").pause();
             gestorDeAudio.getMusica("boss").play();
             musicaSonando = true;
             timerIntro = 11f;
@@ -109,7 +104,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
         }
     }
     public void restarTimerIntro(float delta) {
-        if (timerIntro > 0 && hud.getOleadas() >= 11) {
+        if (timerIntro > 0 && hud.getOleadas() >= 10) {
             timerIntro-=delta;
         }
     }
@@ -130,7 +125,7 @@ public class PantallaJuego extends PantallaJuegoAbstracta {
     @Override
     public void hide() {
         gestorDeAudio.getMusica("boss").pause();
-        //gestorDeAudio.getMusica("gamemusic").pause();
+        gestorDeAudio.getMusica("gamemusic").pause();
     }
     @Override
     public void dispose() {
